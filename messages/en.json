@@ -2,12 +2,67 @@
   "Index": {
     "title": "Hello world!"
   },
+    "Auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Sign in to your account to start using TalentQ V2",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember Me",
+      "forgotPassword": "Forgot Password?",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "noAccount": "DON'T HAVE AN ACCOUNT?",
+      "signUp": "SIGN UP",
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "generic": "An error occurred. Please try again.",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email",
+        "passwordRequired": "Password is required",
+        "passwordInvalid": "Password must be at least 8 characters"
+      }
+    }
+  },
+    "Common": {
+    "copyright": {
+      "text": "© {year} TalentQ. All rights reserved."
+    },
+    "logo": {
+      "footerAlt": "TalentQ Logo"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "optional": "(optional)",
+    "actions": "Actions",
+    "status": "Status",
+    "name": "Name",
+    "description": "Description",
+    "email": "Email",
+    "role": "Role",
+    "password": "Password",
+    "permissions": "Permissions",
+    "tryAgain": "Try Again",
+    "noDataFound": "No data found.",
+    "view": "View",
+    "clear": "Clear"
+  },
   "AnalyticsDashboard": {
     "widget_title": "Upgrade your Dashcode",
     "widget_desc": "Pro plan for better results",
     "widget_badge": "now",
     "revenue_chart_title": "Total Revenue",
-    "revenue_report": "Revenue Report",
+    "revenue_report": "Candidate Status by Month",
     "sold_chart_title": "Products sold",
     "growth_chart_title": "Growth",
     "overview_circle_chart_title": "Overview",
@@ -42,15 +97,18 @@
     "account_payable": "Account Payable"
   },
   "EcommerceDashboard": {
-    "widget_title": "Good evening",
-    "widget_desc": "Welcome to Dashcode",
+    "current_balance": "Presented",
+    "credit": "Accepted",
+    "debit": "Billed",
+    "widget_title": "Hello",
+    "widget_desc": "Welcome to TalentQ",
     "revenue_chart_title": "Total Revenue",
     "revenue_report": "Revenue Report",
     "sold_chart_title": "Products sold",
     "growth_chart_title": "Growth",
     "company_table_title": "All Company",
-    "recent_order_table_title": "Recent Orders",
-    "customer": "Customer",
+    "recent_order_table_title": "Recent Requisitions",
+    "customer": "Top Customers",
     "visitors_report": "Visitors Report",
     "Visitors_by_gender": "Visitors By Gender",
     "best_selling_products": "Best Selling Products",
@@ -59,9 +117,9 @@
     "progress": "Progress",
     "most_sales_map_title": "Most Sales",
     "total_earning_map_button_1": "Global",
-    "orders": "Orders",
-    "profit": "Profit",
-    "earnings": "Earnings",
+    "dashboard_stats_requisitions": "Requisitions",
+    "dashboard_stats_candidates": "Candidates",
+    "dashboard_stats_billed_candidates": "Billed Amount",
     "statistics": "Statistics",
     "statistics_graph_desc": "From Last weeks"
   },
@@ -125,6 +183,8 @@
   },
   "Menu": {
     "dashboard": "Dashboard",
+    "candidates": "Candidates",
+    "requisitions": "Requisitions",
     "analytics": "Analytics",
     "banking": "Banking",
     "crm": "Crm",
