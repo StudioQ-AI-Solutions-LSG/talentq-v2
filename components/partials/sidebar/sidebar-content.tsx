@@ -53,6 +53,7 @@ const SidebarContent = ({ children }: { children: React.ReactNode }) => {
         {children}
       </div>
     </aside>
+    
   );
 };
 
