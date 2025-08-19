@@ -199,66 +199,6 @@ export const columns: ColumnDef<DataProps>[] = [
     },
   },
 
-  /*   {
-    accessorKey: "interview_date",
-    header: "Interview",
-    cell: ({ row }) => {
-      const date = row.getValue("interview_date");
-      return (
-        <div className="flex items-center space-x-2">
-          <FaDotCircle className={`text-${"red"}-500`} />
-          <span className="text-sm text-gray-700">
-            {date ? format(new Date(row.getValue("interview_date")), "MMM dd, yyyy") : "—"}
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "decision_date",
-    header: "Decisition",
-    cell: ({ row }) => {
-      return <span>{row.getValue("decision_date")}</span>;
-    },
-  },
-  {
-    accessorKey: "activation_date",
-    header: "Activation Date",
-    cell: ({ row }) => {
-      return <span>{row.getValue("activation_date")}</span>;
-    },
-  },
-  {
-    accessorKey: "billing_date",
-    header: "Billing",
-    cell: ({ row }) => {
-      return <span>{row.getValue("billing_date")}</span>;
-    },
-  }, */
-  /*
-    {
-    accessorKey: "order",
-    header: "Order",
-    cell: ({ row }) => <span>{row.getValue("order")}</span>,
-  },
-  {
-    accessorKey: "quantity",
-    header: "Quantity",
-    cell: ({ row }) => {
-      return (
-        <span>{row.getValue("quantity")}</span>
-      )
-    }
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-    cell: ({ row }) => {
-      return (
-        <span>{row.getValue("amount")}</span>
-      )
-    }
-  }*/
   {
     accessorKey: "status",
     header: "Status",
