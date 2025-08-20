@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { requisitionsService } from '../services/requisitions.service';
 import type { 
@@ -8,16 +7,16 @@ import type {
   UpdateRequisitionRequest 
 } from '../types/requisitions.types';
 
-// Tipo de retorno del hook principal
+// Main hook return type
 interface UseRequisitionsReturn {
-  // Datos
+  // Data
   requisitions: Requisition[];
   total: number;
   totalPages: number;
   currentPage: number;
-  stats: any; // TODO: Tipificar cuando se defina RequisitionStats
+  stats: any; // TODO: Type when RequisitionStats is defined
   
-  // Estados de carga
+  // Loading states
   isLoading: boolean;
   statsLoading: boolean;
   isCreating: boolean;
@@ -25,21 +24,21 @@ interface UseRequisitionsReturn {
   isDeleting: boolean;
   isUpdatingStatus: boolean;
   
-  // Estados de error
+  // Error states
   error: Error | null;
   createError: Error | null;
   updateError: Error | null;
   deleteError: Error | null;
   statusUpdateError: Error | null;
   
-  // Acciones
+  // Actions
   refetch: () => void;
   createRequisition: (data: CreateRequisitionRequest) => void;
   updateRequisition: (params: { id: string; data: UpdateRequisitionRequest }) => void;
   deleteRequisition: (id: string) => void;
   updateStatus: (params: { id: string; status: string }) => void;
   
-  // Mutations para acceso directo si es necesario
+  // Mutations for direct access if needed
   createRequisitionMutation: any;
   updateRequisitionMutation: any;
   deleteRequisitionMutation: any;
@@ -47,11 +46,11 @@ interface UseRequisitionsReturn {
 }
 
 /**
- * Hook principal para gestionar requisitions con React Query
- * @param filters - Filtros opcionales para las requisitions
- * @param page - Número de página actual (por defecto: 1)
- * @param limit - Límite de elementos por página (por defecto: 8)
- * @returns Objeto con datos, estados de carga, errores y acciones
+ * Main hook for managing requisitions with React Query
+ * @param filters - Optional filters for requisitions
+ * @param page - Current page number (default: 1)
+ * @param limit - Limit of items per page (default: 8)
+ * @returns Object with data, loading states, errors and actions
  */
 export const useRequisitions = (
   filters?: RequisitionFilters, 
@@ -60,11 +59,7 @@ export const useRequisitions = (
 ): UseRequisitionsReturn => {
   const queryClient = useQueryClient();
 
-  // Debug: Log de filtros recibidos en el hook
-  console.log('🔍 Hook - Filters received:', filters);
-  console.log('🔍 Hook - Page:', page, 'Limit:', limit);
-
-  // Query para obtener requisitions con filtros y paginación
+  // Query to get requisitions with filters and pagination
   const {
     data: requisitionsData,
     isLoading,
@@ -73,21 +68,21 @@ export const useRequisitions = (
   } = useQuery({
     queryKey: ['requisitions', filters, page, limit],
     queryFn: () => requisitionsService.getRequisitions(filters, page, limit),
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    placeholderData: (previousData) => previousData // Mantener datos anteriores mientras se cargan nuevos
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    placeholderData: (previousData) => previousData // Keep previous data while loading new ones
   });
 
-  // Query para estadísticas de requisitions
+  // Query for requisition statistics
   const {
     data: stats,
     isLoading: statsLoading
   } = useQuery({
     queryKey: ['requisitions-stats'],
     queryFn: () => requisitionsService.getRequisitionStats(),
-    staleTime: 10 * 60 * 1000 // 10 minutos
+    staleTime: 10 * 60 * 1000 // 10 minutes
   });
 
-  // Mutation para crear requisitions
+  // Mutation for creating requisitions
   const createRequisitionMutation = useMutation({
     mutationFn: (data: CreateRequisitionRequest) => requisitionsService.createRequisition(data),
     onSuccess: () => {
@@ -96,7 +91,7 @@ export const useRequisitions = (
     }
   });
 
-  // Mutation para actualizar requisitions
+  // Mutation for updating requisitions
   const updateRequisitionMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateRequisitionRequest }) => 
       requisitionsService.updateRequisition(id, data),
@@ -106,7 +101,7 @@ export const useRequisitions = (
     }
   });
 
-  // Mutation para eliminar requisitions
+  // Mutation for deleting requisitions
   const deleteRequisitionMutation = useMutation({
     mutationFn: (id: string) => requisitionsService.deleteRequisition(id),
     onSuccess: () => {
@@ -115,7 +110,7 @@ export const useRequisitions = (
     }
   });
 
-  // Mutation para actualizar estado
+  // Mutation for updating status
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) => 
       requisitionsService.updateRequisitionStatus(id, status),
@@ -128,14 +123,14 @@ export const useRequisitions = (
 
 
   return {
-    // Datos
+    // Data
     requisitions: requisitionsData?.requisitions || [],
     total: requisitionsData?.total || 0,
     totalPages: requisitionsData?.total_pages || 1,
     currentPage: page,
     stats,
     
-    // Estados de carga
+    // Loading states
     isLoading,
     statsLoading,
     isCreating: createRequisitionMutation.isPending,
@@ -143,21 +138,21 @@ export const useRequisitions = (
     isDeleting: deleteRequisitionMutation.isPending,
     isUpdatingStatus: updateStatusMutation.isPending,
     
-    // Estados de error
+    // Error states
     error,
     createError: createRequisitionMutation.error,
     updateError: updateRequisitionMutation.error,
     deleteError: deleteRequisitionMutation.error,
     statusUpdateError: updateStatusMutation.error,
     
-    // Acciones
+    // Actions
     refetch,
     createRequisition: createRequisitionMutation.mutate,
     updateRequisition: updateRequisitionMutation.mutate,
     deleteRequisition: deleteRequisitionMutation.mutate,
     updateStatus: updateStatusMutation.mutate,
     
-    // Mutations para acceso directo si es necesario
+    // Mutations for direct access if needed
     createRequisitionMutation,
     updateRequisitionMutation,
     deleteRequisitionMutation,
@@ -165,9 +160,9 @@ export const useRequisitions = (
   };
 };
 
-// Tipo de retorno del hook individual
+// Individual hook return type
 interface UseRequisitionReturn {
-  requisition: any; // TODO: Tipificar cuando se defina Requisition
+  requisition: any; // TODO: Type when Requisition is defined
   isLoading: boolean;
   error: Error | null;
   updateRequisition: (data: UpdateRequisitionRequest) => void;
@@ -176,9 +171,9 @@ interface UseRequisitionReturn {
 }
 
 /**
- * Hook para gestionar una requisition individual
- * @param id - ID de la requisition
- * @returns Objeto con datos, estados de carga, errores y acciones para una requisition
+ * Hook for managing an individual requisition
+ * @param id - Requisition ID
+ * @returns Object with data, loading states, errors and actions for a requisition
  */
 export const useRequisition = (id: string): UseRequisitionReturn => {
   const queryClient = useQueryClient();
@@ -191,7 +186,7 @@ export const useRequisition = (id: string): UseRequisitionReturn => {
     queryKey: ['requisition', id],
     queryFn: () => requisitionsService.getRequisition(id),
     enabled: !!id,
-    staleTime: 5 * 60 * 1000 // 5 minutos
+    staleTime: 5 * 60 * 1000 // 5 minutes
   });
 
   const updateRequisitionMutation = useMutation({

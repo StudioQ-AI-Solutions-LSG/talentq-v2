@@ -19,7 +19,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
   requisition,
   onViewDetails
 }) => {
-  // Función para obtener las iniciales del customer (por ahora usamos las iniciales del position_name)
+  // Function to get customer initials (for now we use position_name initials)
   const getInitials = (name: string): string => {
     return name
       .split(' ')
@@ -29,7 +29,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
       .slice(0, 2);
   };
 
-  // Función para formatear fecha
+  // Function to format date
   const formatDate = (dateString: string): string => {
     try {
       const date = new Date(dateString);
@@ -39,7 +39,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
     }
   };
 
-  // Función para obtener el color del badge según el status
+  // Function to get badge color based on status
   const getStatusBadgeColor = (status: string): string => {
     switch (status.toLowerCase()) {
       case 'active':
@@ -55,7 +55,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
     }
   };
 
-  // Función para obtener el color del badge según la seniority
+  // Function to get badge color based on seniority
   const getSeniorityBadgeColor = (seniority: string): string => {
     switch (seniority.toLowerCase()) {
       case 'junior':
@@ -75,16 +75,16 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-700 h-[520px] flex flex-col">
-      {/* Header con imagen, nombre y menú - Altura fija */}
+      {/* Header with image, name and menu - Fixed height */}
       <div className="p-4 border-b border-gray-50 dark:border-gray-800/30 h-24 flex-shrink-0">
         <div className="flex items-start justify-between h-full">
           <div className="flex items-start space-x-3 flex-1 min-w-0">
-            {/* Avatar con iniciales */}
+            {/* Avatar with initials */}
             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
               {getInitials(requisition.position_name)}
             </div>
             
-            {/* Nombre de la posición - Altura fija con overflow controlado */}
+            {/* Position name - Fixed height with controlled overflow */}
             <div className="flex-1 min-w-0 pr-2">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight line-clamp-2 h-12">
                 {requisition.position_name}
@@ -95,7 +95,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
             </div>
           </div>
 
-          {/* Menú de tres puntos */}
+          {/* Three dots menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -117,14 +117,14 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
         </div>
       </div>
 
-      {/* Descripción - Altura fija */}
+      {/* Description - Fixed height */}
       <div className="p-4 border-b border-gray-50 dark:border-gray-800/30 h-20 flex-shrink-0">
         <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 h-full">
           We are looking for a talented professional to join our team. This position requires strong technical skills and experience in the field.
         </p>
       </div>
 
-      {/* Fechas - Altura fija */}
+      {/* Dates - Fixed height */}
       <div className="p-4 border-b border-gray-50 dark:border-gray-800/30 h-20 flex-shrink-0">
         <div className="grid grid-cols-2 gap-4 h-full">
           <div className="flex items-center space-x-2">
@@ -142,7 +142,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">End Date</p>
               <p className="text-sm font-medium text-gray-900 dark:text-white">
-                {/* Por ahora usamos la misma fecha, se puede ajustar cuando tengamos el campo end_date */}
+                {/* For now we use the same date, can be adjusted when we have the end_date field */}
                 {formatDate(requisition.start_date)}
               </p>
             </div>
@@ -150,7 +150,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
         </div>
       </div>
 
-      {/* Badges de estado y seniority - Altura fija */}
+      {/* Status and seniority badges - Fixed height */}
       <div className="p-4 border-b border-gray-50 dark:border-gray-800/30 h-16 flex-shrink-0">
         <div className="flex flex-wrap gap-2">
           <Badge className={getStatusBadgeColor(requisition.status)}>
@@ -167,7 +167,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
         </div>
       </div>
 
-      {/* Barra de Progreso - Altura fija */}
+      {/* Progress Bar - Fixed height */}
       <div className="p-4 border-b border-gray-50 dark:border-gray-800/30 h-16 flex-shrink-0">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -183,7 +183,7 @@ export const RequisitionCard: React.FC<RequisitionCardProps> = ({
         </div>
       </div>
 
-      {/* Footer con botón - Altura fija, siempre al final */}
+      {/* Footer with button - Fixed height, always at the bottom */}
       <div className="p-4 mt-auto flex-shrink-0">
         <Button
           onClick={() => onViewDetails(requisition.id)}

@@ -9,7 +9,7 @@ import type {
     RequisitionStats
 } from "../types/requisitions.types";
 
-// Función helper para convertir la respuesta del backend al formato del frontend
+// Helper function to convert backend response to frontend format
 const mapBackendResponseToFrontend = (backendResponse: RequisitionListResponse, page: number, pageSize: number): RequisitionListResponseLegacy => {
     const total = backendResponse.itemsTotal;
     const totalPages = Math.ceil(total / pageSize);
@@ -27,22 +27,22 @@ const mapBackendResponseToFrontend = (backendResponse: RequisitionListResponse, 
 
 export const requisitionsService = {
     // ========================================
-    // OPERACIONES CRUD - Devuelven JSON
+    // CRUD OPERATIONS - Return JSON
     // ========================================
 
     /**
-     * Obtiene la lista de requisitions con filtros y paginación
-     * @returns Promise<RequisitionListResponseLegacy> - Lista paginada de requisitions
+     * Gets the list of requisitions with filters and pagination
+     * @returns Promise<RequisitionListResponseLegacy> - Paginated list of requisitions
      */
     getRequisitions: async (filters?: RequisitionFilters, page: number = 1, limit: number = 8): Promise<RequisitionListResponseLegacy> => {
         try {
             const params = new URLSearchParams();
 
-            // Parámetros requeridos por el backend
+            // Required backend parameters
             params.append('page', page.toString());
             params.append('page_size', limit.toString());
 
-            // Parámetros opcionales
+            // Optional parameters
             if (filters?.search_criteria) params.append('search_criteria', filters.search_criteria);
             if (filters?.status && filters.status !== 'all') params.append('status', filters.status);
             if (filters?.skills && filters.skills.length > 0) params.append('skills', filters.skills.join(','));
@@ -50,45 +50,25 @@ export const requisitionsService = {
             if (filters?.position_id && filters.position_id !== 'all') params.append('position_id', filters.position_id);
             if (filters?.customer_id && filters.customer_id !== 'all') {
                 params.append('selected_customer', filters.customer_id);
-                console.log('👤 Adding customer filter:', filters.customer_id);
-            } else {
-                console.log('🌍 No customer filter (All Accounts)');
             }
             if (filters?.division_id && filters.division_id !== 'all') params.append('selected_division', filters.division_id);
 
-            // Lógica de filtros por defecto - SOLO aplicar status=Active si hay customer específico
-            // y NO hay status explícito seleccionado
-            //   if (filters?.customer_id && 
-            //       filters.customer_id !== 'all' && 
-            //       filters.customer_id !== '' && 
-            //       filters.customer_id !== undefined &&
-            //       (!filters?.status || filters.status === 'all')) {
-            //     params.append('status', 'Active');
-            //     console.log('🔒 Applying default status filter: Active (customer specific)');
-            //   } else {
-            //     console.log('🌍 No default status filter applied');
-            //   }
-
-            console.log('🔍 Calling API with params:', params.toString());
-            console.log('📊 Filters received:', JSON.stringify(filters, null, 2));
-            console.log('🎯 Final URL:', `/requisition/positions?${params.toString()}`);
-
-            // Llamada HTTP que devuelve JSON
+            // HTTP call that returns JSON
             const response = await httpV2.get<RequisitionListResponse>(`/requisition/positions?${params.toString()}`);
 
-            console.log('✅ API Response:', response);
+            console.log('API Response:', response);
 
-            // Convertir la respuesta del backend al formato del frontend
+            // Convert backend response to frontend format
             return mapBackendResponseToFrontend(response, page, limit);
         } catch (error) {
-            console.error('❌ Error fetching requisitions:', error);
+            console.error('Error fetching requisitions:', error);
             throw error;
         }
     },
 
     /**
-     * Obtiene una requisition individual por ID
-     * @returns Promise<Requisition> - Datos de la requisition
+     * Gets an individual requisition by ID
+     * @returns Promise<Requisition> - Requisition data
      */
     getRequisition: async (id: string): Promise<Requisition> => {
         try {
@@ -101,8 +81,8 @@ export const requisitionsService = {
     },
 
     /**
-     * Crea una nueva requisition
-     * @returns Promise<Requisition> - Requisition creada
+     * Creates a new requisition
+     * @returns Promise<Requisition> - Created requisition
      */
     createRequisition: async (data: CreateRequisitionRequest): Promise<Requisition> => {
         try {
@@ -115,8 +95,8 @@ export const requisitionsService = {
     },
 
     /**
-     * Actualiza una requisition existente
-     * @returns Promise<Requisition> - Requisition actualizada
+     * Updates an existing requisition
+     * @returns Promise<Requisition> - Updated requisition
      */
     updateRequisition: async (id: string, data: UpdateRequisitionRequest): Promise<Requisition> => {
         try {
@@ -129,8 +109,8 @@ export const requisitionsService = {
     },
 
     /**
-     * Elimina una requisition
-     * @returns Promise<void> - Sin retorno
+     * Deletes a requisition
+     * @returns Promise<void> - No return
      */
     deleteRequisition: async (id: string): Promise<void> => {
         try {
@@ -142,8 +122,8 @@ export const requisitionsService = {
     },
 
     /**
-     * Obtiene estadísticas de requisitions
-     * @returns Promise<RequisitionStats> - Estadísticas en formato JSON
+     * Gets requisition statistics
+     * @returns Promise<RequisitionStats> - Statistics in JSON format
      */
     getRequisitionStats: async (): Promise<RequisitionStats> => {
         try {
@@ -156,8 +136,8 @@ export const requisitionsService = {
     },
 
     /**
-     * Actualiza el estado de una requisition
-     * @returns Promise<Requisition> - Requisition con estado actualizado
+     * Updates the status of a requisition
+     * @returns Promise<Requisition> - Requisition with updated status
      */
     updateRequisitionStatus: async (id: string, status: string): Promise<Requisition> => {
         try {
@@ -168,6 +148,4 @@ export const requisitionsService = {
             throw error;
         }
     },
-
-
 };

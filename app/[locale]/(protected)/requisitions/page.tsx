@@ -35,7 +35,7 @@ const RequisitionsPage = () => {
     division_id: "all"
   });
 
-  // Efecto para actualizar automáticamente el customer_id cuando cambie el account seleccionado
+  // Hook to automatically update the customer_id when the selected account changes
   useEffect(() => {
     if (selectedAccount && selectedAccount.id !== "all") {
       setAdvancedFilters(prev => ({
@@ -46,23 +46,19 @@ const RequisitionsPage = () => {
     } else {
       setAdvancedFilters(prev => ({
         ...prev,
-        customer_id: undefined // Usar undefined para "All Accounts"
+        customer_id: undefined // Use undefined for "All Accounts"
       }));
       console.log('🌍 Setting customer_id to undefined (All Accounts)');
     }
   }, [selectedAccount]);
 
-  // Combinar filtros básicos con avanzados
+  // Mixing basic and advanced filters
   const filters: RequisitionFilters = {
     ...advancedFilters,
     search_criteria: searchTerm || advancedFilters.search_criteria
   };
 
-  // Debug: Log de filtros que se envían al hook
-  console.log('🔍 Page - Filters being sent to useRequisitions:', filters);
-  console.log('👤 Page - Selected Account:', selectedAccount);
-
-  // Hook para obtener datos
+  // Hook to get data
   const {
     requisitions,
     total,
@@ -91,7 +87,7 @@ const RequisitionsPage = () => {
   };
 
   const handleViewDetails = (id: string) => {
-    // TODO: Implementar navegación a la vista de detalles
+    // TODO: Implement navigation to the details view
     console.log("View details for requisition:", id);
   };
 
@@ -108,7 +104,7 @@ const RequisitionsPage = () => {
           <p className="text-gray-600 dark:text-gray-400">
             {t("subtitle")}
           </p>
-          {/* Mostrar el account seleccionado */}
+          {/* Show the selected account */}
           {selectedAccount && (
             <div className="mt-2 flex items-center space-x-2">
               <span className="text-sm text-gray-500 dark:text-gray-400">Filtering by:</span>
@@ -119,12 +115,12 @@ const RequisitionsPage = () => {
           )}
         </div>
 
-        {/* Filtros y Acciones */}
+        {/* Filters and Actions */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-end">
-            {/* Todos los elementos alineados a la derecha */}
+            {/* All elements aligned to the right */}
             <div className="flex flex-col sm:flex-row gap-4 items-center">
-              {/* Búsqueda */}
+              {/* Search */}
               <div className="relative w-64">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
@@ -135,7 +131,7 @@ const RequisitionsPage = () => {
                 />
               </div>
 
-              {/* Botón de filtros avanzados */}
+              {/* Advanced filters button */}
               <Button
                 variant="outline"
                 onClick={() => setShowAdvancedFilters(true)}
@@ -145,7 +141,7 @@ const RequisitionsPage = () => {
                 <span>{t("filters.allFilters")}</span>
               </Button>
 
-              {/* Botón Reset */}
+              {/* Reset button */}
               <Button
                 variant="ghost"
                 onClick={() => {
@@ -167,7 +163,7 @@ const RequisitionsPage = () => {
                 <span>{t("filters.reset")}</span>
               </Button>
 
-              {/* Botón Create Requisition */}
+              {/* Create Requisition button */}
               <Button className="flex items-center space-x-2">
                 <Plus className="h-4 w-4" />
                 <span>{t("actions.createRequisition")}</span>
@@ -176,7 +172,7 @@ const RequisitionsPage = () => {
           </div>
         </div>
 
-        {/* Estadísticas */}
+        {/* Statistics */}
         {!statsLoading && stats && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
@@ -294,7 +290,7 @@ const RequisitionsPage = () => {
           )}
         </div>
 
-        {/* Paginación */}
+        {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-6 flex justify-center">
             <Pagination
@@ -305,7 +301,7 @@ const RequisitionsPage = () => {
           </div>
         )}
 
-        {/* Filtros Avanzados Modal */}
+        {/* Advanced Filters Modal */}
         <AdvancedFilters
           filters={advancedFilters}
           onFiltersChange={handleAdvancedFiltersChange}

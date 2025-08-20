@@ -25,12 +25,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 }) => {
   const [localFilters, setLocalFilters] = useState<RequisitionFilters>(filters);
 
-  // Sincronizar filtros locales cuando cambien los filtros externos
+  // Synchronize local filters when external filters change
   React.useEffect(() => {
     setLocalFilters(filters);
   }, [filters]);
 
-  // Opciones para los filtros
+  // Filter options
   const statusOptions = [
     { value: 'all', label: 'All Statuses' },
     { value: 'Active', label: 'Active' },
@@ -83,7 +83,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       skills: [],
       seniority_id: 'all',
       position_id: 'all',
-      customer_id: selectedAccount?.id || undefined, // Mantener el account seleccionado
+      customer_id: selectedAccount?.id || undefined, // Keep selected account
       division_id: 'all'
     };
     setLocalFilters(clearedFilters);
