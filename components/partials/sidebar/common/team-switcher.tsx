@@ -54,37 +54,6 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
 interface TeamSwitcherProps extends PopoverTriggerProps {}
 
 export default function TeamSwitcher({ className }: TeamSwitcherProps) {
-  const userAuthStorage = JSON.parse(
-    localStorage.getItem("auth-storage") || "{}"
-  )?.state?.user;
-  const customerIdentifier =
-    userAuthStorage?.general_properties?.talentq_configuration
-      ?.customer_identifier;
-
-  const defaultDivisionIdConfiguration =
-    customerIdentifier?.studioq_organization_default_division_id;
-
-  // const defaultCustomerIdConfiguration =
-  //   customerIdentifier?.studioq_organization_customer_id;
-
-  const divisionList = userAuthStorage?.division_list;
-
-  const divisions = divisionList
-    ?.filter((division: any) => division.platform === "talentq")
-    .map((div: any) => {
-      return {
-        id: div.id,
-        label: div.name,
-        value: div.name,
-      };
-    });
-
-  const defaultDivision = !defaultDivisionIdConfiguration
-    ? divisions?.length > 0
-      ? divisions[0].id
-      : ""
-    : defaultDivisionIdConfiguration;
-
   const [config] = useConfig();
   const [hoverConfig] = useMenuHoverConfig();
   const { hovered } = hoverConfig;
@@ -93,25 +62,18 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   const [isChangingAccount, setIsChangingAccount] = React.useState(false);
   const [isChangingDivision, setIsChangingDivision] = React.useState(false);
-  const [selectedDivision, setSelectedDivision] =
-    React.useState(defaultDivision);
 
   const DEFAULT_PAGE = "1";
   const DEFAULT_LIMIT = "1000";
-
+  const {selectedDivision, setSelectedDivision} = useAuthStore.getState();
   const { accounts, isLoading, error, refetch } = useAccounts({
-    selected_division: selectedDivision,
+    selected_division: selectedDivision, 
     page: DEFAULT_PAGE,
     limit: DEFAULT_LIMIT,
   });
 
   const { setParams: setCandidatesStore, selected_customer_name } =
     useCandidatesStore();
-
-  const handleDivisionChange = (value: string) => {
-    setSelectedDivision(value);
-    // setParams({ status: value });
-  };
 
   // Debounced account change to prevent rapid successive changes
   const debouncedAccountChange = React.useCallback(
@@ -148,19 +110,19 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const debouncedDivisionChange = React.useCallback(
     React.useMemo(() => {
       let timeoutId: NodeJS.Timeout;
-      return (accountId: string, accountName: string) => {
+      return (divisionId: string) => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           if (isChangingDivision) return;
 
+          setSelectedDivision(divisionId)
           setIsChangingDivision(true);
           // setOpen(false);
 
           try {
             // Batch all store updates together
             setCandidatesStore({
-              selected_customer: accountId,
-              selected_customer_name: accountName,
+              selected_division: divisionId,
             });
           } catch (error) {
             console.error("Error changing account:", error);
@@ -376,9 +338,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
         </DialogContent>
       </Dialog>
       <DivisionFilter
-        divisions={divisions}
-        selected_division={selectedDivision}
-        onChange={handleDivisionChange}
+        onChange={debouncedDivisionChange}
       />
     </div>
   );

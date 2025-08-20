@@ -1,20 +1,13 @@
 "use client";
 
 import * as React from "react";
-import {
-  SortingState,
-  VisibilityState,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import { FiSearch } from "react-icons/fi";
-import { columns } from "./components/candidates-columns";
 import { Input } from "@/components/ui/input";
 import debounce from "just-debounce-it";
 
-import TablePagination from "./components/candidates-table-pagination";
+import TablePagination, {
+  PaginationButtonProps,
+} from "./components/candidates-table-pagination";
 import { useCandidates } from "./hooks/use-candidates";
 import { Loader2 } from "lucide-react";
 import { useCandidatesStore } from "@/store/candidate.store";
@@ -23,15 +16,16 @@ import CandidateList from "./components/candidates-list";
 import SiteBreadcrumb from "@/components/site-breadcrumb";
 
 const CandidateSection = () => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [selectedRequisitionId, setSelectedRequisitionId] = React.useState<
-    string | null
-  >(null);
   const [selectedStatus, setSelectedStatus] = React.useState<string>("");
-  const { search_criteria, page, page_size, setParams } = useCandidatesStore();
+  const {
+    search_criteria,
+    page,
+    page_size,
+    setParams,
+    selected_division,
+    selected_customer,
+    selected_customer_name,
+  } = useCandidatesStore();
 
   const [search, setSearch] = React.useState(search_criteria ?? "");
 
@@ -63,39 +57,24 @@ const CandidateSection = () => {
     pageIndex: page - 1,
     pageSize: page_size,
   };
-  const table = useReactTable({
-    data: candidates ?? [],
-    columns,
-    manualPagination: true,
-    manualFiltering: true,
-    pageCount: servicePagination?.totalPages ?? 1,
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onPaginationChange: (updater) => {
-      const next =
-        typeof updater === "function" ? updater(paginationState) : updater;
-      setParams({
-        page: next.pageIndex + 1,
-        page_size: next.pageSize,
-      });
-    },
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      pagination: paginationState,
-    },
-  });
+
+  const table: PaginationButtonProps = {
+    currentPage: paginationState.pageIndex + 1,
+    totalPages: servicePagination?.totalPages ?? 1,
+    previousPage: () => setParams({ page: paginationState.pageIndex }),
+    nextPage: () => setParams({ page: paginationState.pageIndex + 2 }),
+    getCanPreviousPage: () => paginationState.pageIndex > 0,
+    getCanNextPage: () =>
+      paginationState.pageIndex < (servicePagination?.totalPages ?? 1) - 1,
+    setPageIndex: (pageIndex: number) => setParams({ page: pageIndex + 1 }),
+    pagination: paginationState,
+  };
 
   return (
     <div className="w-full">
       <SiteBreadcrumb />
-      <div className="">
-        <div className="text-2xl font-medium text-default-900 mb-4">
+      <div className="flex items-center justify-end gap-3 w-full mt-1">
+        <div className="flex items-center justify-start text-2xl font-medium text-default-900 mb-4">
           Candidates
         </div>
         <div className="flex items-center justify-end gap-3 w-full mt-1">

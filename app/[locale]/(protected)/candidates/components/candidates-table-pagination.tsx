@@ -7,9 +7,22 @@ interface DataTablePaginationProps {
   table: Table<any>;
 }
 
-const TablePagination = ({ table }: DataTablePaginationProps) => {
-  const currentPage = table.getState().pagination.pageIndex;
-  const totalPages = table.getPageCount();
+export interface PaginationButtonProps {
+  currentPage: number;
+  totalPages: number;
+  previousPage: () => void;
+  nextPage: () => void;
+  getCanPreviousPage: () => boolean;
+  getCanNextPage: () => boolean;
+  setPageIndex: (pageIndex: number) => void;
+  pagination: {
+    pageIndex: number;
+  };
+}
+
+const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
+  const currentPage = table.currentPage;
+  const totalPages = table.totalPages;
 
   const getPageButtons = () => {
     const pages = new Set<number>();
@@ -50,9 +63,7 @@ const TablePagination = ({ table }: DataTablePaginationProps) => {
                 size="icon"
                 className="w-8 h-8 cursor-pointer"
                 variant={
-                  table.getState().pagination.pageIndex === page
-                    ? "default"
-                    : "outline"
+                  table.pagination.pageIndex === page ? "default" : "outline"
                 }
               >
                 {page + 1}

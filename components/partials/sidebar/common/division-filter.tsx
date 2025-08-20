@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronDown } from "lucide-react";
+import { useAuthStore } from "@/store/auth.store";
 
 type DivisionFilter = {
   id: string;
@@ -16,8 +17,6 @@ type DivisionFilter = {
 };
 
 type DivisionsFilterProps = {
-  divisions: DivisionFilter[];
-  selected_division: string;
   onChange: (id: string) => void;
 };
 
@@ -30,11 +29,9 @@ const statusStyles: Record<string, string> = {
   Billed: "bg-purple-100 text-purple-600",
 };
 
-export const DivisionFilter = ({
-  divisions,
-  selected_division,
-  onChange,
-}: DivisionsFilterProps) => {
+export const DivisionFilter = ({ onChange }: DivisionsFilterProps) => {
+  const { divisions, selectedDivision: selectedDivisionId } =
+    useAuthStore.getState();
   const [open, setOpen] = React.useState(false);
 
   const toggleValue = (id: string) => {
@@ -42,7 +39,7 @@ export const DivisionFilter = ({
   };
 
   const selectedDivision = divisions?.find(
-    (div) => div.id === selected_division
+    (div) => div.id === selectedDivisionId
   );
 
   return (
@@ -89,7 +86,7 @@ export const DivisionFilter = ({
               className="flex items-center space-x-2 cursor-pointer px-2 py-2 hover:bg-blue-50 rounded-md"
             >
               <Checkbox
-                checked={selected_division === division.id}
+                checked={selectedDivisionId === division.id}
                 onCheckedChange={() => toggleValue(division.id)}
               />
               <span className="text-sm text-gray-800">{division.label}</span>

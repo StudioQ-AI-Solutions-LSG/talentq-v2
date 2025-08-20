@@ -3,7 +3,7 @@ import { Account } from "@/types/accounts.types";
 import { useQuery } from "@tanstack/react-query";
 
 type AccountListParams = {
-  selected_division?: string;
+  selected_division?: string | null;
   page?: string;
   limit?: string;
 };
