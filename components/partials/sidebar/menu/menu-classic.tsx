@@ -78,7 +78,6 @@ export function MenuClassic({ }) {
                     })}>
 
                         <TeamSwitcher />
-                        <SearchBar />
                     </div>
 
                 )}
