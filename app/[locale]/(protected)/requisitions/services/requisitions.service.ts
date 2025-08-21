@@ -53,6 +53,7 @@ export const requisitionsService = {
             }
             if (filters?.division_id && filters.division_id !== 'all') params.append('selected_division', filters.division_id);
 
+            console.log('URL request:', `/requisition/positions?${params.toString()}`);
             // HTTP call that returns JSON
             const response = await httpV2.get<RequisitionListResponse>(`/requisition/positions?${params.toString()}`);
 

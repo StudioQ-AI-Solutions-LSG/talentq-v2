@@ -67,6 +67,8 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const DEFAULT_PAGE = "1";
   const DEFAULT_LIMIT = "1000";
   const {selectedDivision, setSelectedDivision} = useAuthStore.getState();
+  // Get the function to change the account from the store and the current account
+  const setSelectedAccount = useAuthStore((state) => state.setSelectedAccount);
   const { accounts, isLoading, error, refetch } = useAccounts({
     selected_division: selectedDivision, 
     page: DEFAULT_PAGE,
@@ -94,6 +96,17 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               selected_customer: accountId,
               selected_customer_name: accountName,
             });
+            
+            // ✅ CORRECCIÓN: También actualizar el useAuthStore
+            if (accountId === "all") {
+              setSelectedAccount(null); // "All Accounts" = null
+            } else {
+              // Buscar el account completo en la lista
+              const selectedAccount = accounts.find(acc => acc.id === accountId);
+              if (selectedAccount) {
+                setSelectedAccount(selectedAccount);
+              }
+            }
           } catch (error) {
             console.error("Error changing account:", error);
           } finally {
@@ -103,8 +116,8 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           }
         }, 100); // 100ms debounce
       };
-    }, [isChangingAccount]),
-    [isChangingAccount]
+    }, [isChangingAccount, setCandidatesStore, setSelectedAccount, accounts]),
+    [isChangingAccount, setCandidatesStore, setSelectedAccount, accounts]
   );
 
   // Debounced division change to prevent rapid successive changes
@@ -116,7 +129,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
         timeoutId = setTimeout(() => {
           if (isChangingDivision) return;
 
-          setSelectedDivision(divisionId)
+          setSelectedDivision(divisionId);
           setIsChangingDivision(true);
           // setOpen(false);
 
@@ -126,7 +139,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               selected_division: divisionId,
             });
           } catch (error) {
-            console.error("Error changing account:", error);
+            console.error("Error changing division:", error);
           } finally {
             setTimeout(() => {
               setIsChangingDivision(false);
@@ -134,8 +147,8 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           }
         }, 100); // 100ms debounce
       };
-    }, [isChangingDivision]),
-    [isChangingDivision]
+    }, [isChangingDivision, setSelectedDivision, setCandidatesStore]),
+    [isChangingDivision, setSelectedDivision, setCandidatesStore]
   );
 
   if (config.showSwitcher === false || config.sidebar === "compact") {
