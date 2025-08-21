@@ -12,18 +12,19 @@ import { Pagination } from "@/components/ui/pagination";
 import { useRequisitions } from "./hooks/useRequisitions";
 import { useAuthStore } from "@/store/auth.store";
 import type { RequisitionFilters } from "./types/requisitions.types";
+import SiteBreadcrumb from "@/components/site-breadcrumb";
 
 const RequisitionsPage = () => {
   const t = useTranslations("Requisitions");
-  
+
   // Estados locales
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-  
+
   // Obtener el account seleccionado del store
   const selectedAccount = useAuthStore((state) => state.selectedAccount);
-  
+
   // Filtros avanzados
   const [advancedFilters, setAdvancedFilters] = useState<RequisitionFilters>({
     search_criteria: "",
@@ -97,6 +98,7 @@ const RequisitionsPage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
+        <SiteBreadcrumb />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {t("title")}
