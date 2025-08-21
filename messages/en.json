@@ -1,8 +1,9 @@
+
 {
   "Index": {
     "title": "Hello world!"
   },
-    "Auth": {
+  "Auth": {
     "login": {
       "title": "Sign in",
       "subtitle": "Sign in to your account to start using TalentQ V2",
@@ -26,7 +27,7 @@
       }
     }
   },
-    "Common": {
+  "Common": {
     "copyright": {
       "text": "© {year} TalentQ. All rights reserved."
     },
@@ -180,7 +181,61 @@
     "view_less": "View Less",
     "add_to_cart": "Add to Cart",
     "see_more": "See More"
-    
+  },
+  "Requisitions": {
+    "title": "Requisitions",
+    "subtitle": "See all the requisitions",
+    "search": {
+      "placeholder": "Search requisitions..."
+    },
+    "filters": {
+      "status": "Status",
+      "allStatuses": "All Statuses",
+      "skills": "Skills",
+      "more": "More Filters",
+      "allFilters": "All filters",
+      "reset": "Reset"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "open": "Open",
+      "inProgress": "In Progress",
+      "closed": "Closed",
+      "onHold": "On Hold"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "stats": {
+      "total": "Total Requisitions",
+      "open": "Open",
+      "inProgress": "In Progress",
+      "closed": "Closed"
+    },
+    "table": {
+      "title": "All Requisitions",
+      "columns": {
+        "title": "Title",
+        "company": "Company",
+        "status": "Status",
+        "priority": "Priority",
+        "candidates": "Candidates",
+        "deadline": "Deadline",
+        "budget": "Budget",
+        "actions": "Actions"
+      },
+      "noData": "No requisitions found"
+    },
+    "actions": {
+      "createNew": "Create New",
+      "createRequisition": "Create Requisition",
+      "view": "View",
+      "edit": "Edit"
+    }
   },
   "Menu": {
     "dashboard": "Dashboard",
@@ -257,14 +312,14 @@
     "input": "Input",
     "textarea": "Textarea",
     "select": "Select",
-    "reactSelect":"React Select",
+    "reactSelect": "React Select",
     "slider": "Slider",
     "switch": "Switch",
     "inputGroup": "Input Group",
-    "inputLayout":"Input Layout",
-    "inputMask":"Input Mask",
-    "inputFile":"File Input",
-    "formValidation":"Form Validation",
+    "inputLayout": "Input Layout",
+    "inputMask": "Input Mask",
+    "inputFile": "File Input",
+    "formValidation": "Form Validation",
     "radio": "Radio",
     "checkbox": "Checkbox",
     "inputOtp": "Input Otp",

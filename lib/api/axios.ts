@@ -87,7 +87,7 @@ import axios, {
   const apiV2 = createApiInstance(
     process.env.NEXT_PUBLIC_API_URL_V2 || "http://localhost:3001/api/v2"
   );
-  
+
   // Factory function to create HTTP methods
   const createHttpMethods = (instance: ReturnType<typeof axios.create>) => ({
     get: <T>(url: string, config: ApiConfig = {}) =>
