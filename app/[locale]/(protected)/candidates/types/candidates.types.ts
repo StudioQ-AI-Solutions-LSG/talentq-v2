@@ -55,4 +55,5 @@ export interface Candidate {
   attachment_english_video: string;
   requisition_position_id: string;
   skills: Skills[];
+  requisition_name: string;
 }
