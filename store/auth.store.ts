@@ -47,10 +47,7 @@ export const useAuthStore = create<AuthState>()(
 
       setLoading: (isLoading) => set({ isLoading }),
 
-      setSelectedAccount: (account) => {
-        console.log('🏪 Store - setSelectedAccount called with:', account);
-        set({ selectedAccount: account });
-      }, // Acción para establecer la cuenta seleccionada
+      setSelectedAccount: (account) => set({ selectedAccount: account }), // Acción para establecer la cuenta seleccionada
 
       setSelectedDivision: (divisionId) =>
         set({ selectedDivision: divisionId }),

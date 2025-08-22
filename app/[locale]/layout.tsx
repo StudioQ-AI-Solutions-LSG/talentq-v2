@@ -31,8 +31,8 @@ export default async function RootLayout({
   const messages = await getMessages();
   const direction = getLangDir(locale);
   return (
-    <html>
-      <body className={`${inter.className} dashcode-app`} lang={locale}>
+    <html lang={locale} dir={direction}>
+      <body className={`${inter.className} dashcode-app `}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <QueryProvider>
             <ThemeProvider
@@ -49,7 +49,7 @@ export default async function RootLayout({
               <Toaster />
               <SonnerToaster />
             </ThemeProvider>
-          </QueryProvider>
+            </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>
