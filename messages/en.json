@@ -239,6 +239,7 @@
   },
   "Menu": {
     "dashboard": "Dashboard",
+  "cardComponents": "Card Components",
     "candidates": "Candidates",
     "requisitions": "Requisitions",
     "analytics": "Analytics",
