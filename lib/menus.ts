@@ -20,6 +20,7 @@ export type Menu = {
   icon: any;
   submenus: Submenu[];
   id: string;
+  
 };
 
 export type Group = {
