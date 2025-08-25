@@ -61,7 +61,7 @@ export function getMenuList(pathname: string, t: any): Group[] {
         {
           id: "card-components",
           href: "/requisitions/components/card",
-          label: "Card Components",
+          label: t("cardComponents"),
           active: pathname.includes("/requisitions/components/card"),
           icon: "heroicons:rectangle-stack",
           submenus: [],

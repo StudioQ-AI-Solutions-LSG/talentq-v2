@@ -4,7 +4,7 @@ import SiteBreadcrumb from "@/components/site-breadcrumb";
 import BasicCard from "./basic-card";
 import MarketingImageCard from "./marketing-image-card";
 import SalesAutomationCard from "./sales-automation-card";
-import { RequisitionCard, RequisitionCardV2, RequisitionCardV3 } from "../requisition-card";
+import { RequisitionCard } from "../requisition-card";
 
 // Mock data for demonstration
 const mockRequisition = {
@@ -15,7 +15,17 @@ const mockRequisition = {
   position_seniority: "senior",
   start_date: "2024-01-15",
   rate: 85000,
-  rate_type: "yearly"
+  rate_type: "yearly",
+  skills: [],
+  created_at: 1705276800000, // Unix timestamp for 2024-01-15
+  accepted_assignments_count: 0,
+  rejected_assignments_count: 0,
+  division_id: "1",
+  position_id: "1",
+  interview_assignments_count: 0,
+  in_progress_assignments_count: 0,
+  was_confirmed_by_the_customer: false,
+  was_confirmed_by_the_organization: false
 };
 
 const Card = () => {
@@ -42,28 +52,12 @@ const Card = () => {
           {/* V1 vs V2 Comparison */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Original RequisitionCard</h3>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Original RequisitionCard (V1)</h3>
               <RequisitionCard 
                 requisition={mockRequisition} 
                 onViewDetails={handleViewDetails} 
               />
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">RequisitionCardV2</h3>
-              <RequisitionCardV2 
-                requisition={mockRequisition} 
-                onViewDetails={handleViewDetails} 
-              />
-            </div>
-          </div>
-
-          {/* V3 - Multiple Cards Layout */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">RequisitionCardV3 - as it comes from the Template.</h3>
-            <RequisitionCardV3 
-              requisition={mockRequisition} 
-              onViewDetails={handleViewDetails} 
-            />
           </div>
         </div>
       </div>
