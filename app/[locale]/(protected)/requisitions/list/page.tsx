@@ -1,22 +1,41 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/auth.store";
+import { useCandidatesStore } from "@/store/candidate.store";
 import ListTable from "./components/list-table";
 import { getRequisitions } from "../services/data";
 
 const RequisitionList = () => {
-  const selectedCustomer = useAuthStore((state) => state.selectedCustomer);
-  const selectedDivision = useAuthStore((state) => state.selectedDivision);
+  const {
+    selected_customer: selectedCustomer,
+    selected_division: selectedDivision,
+  } = useCandidatesStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCustomer, selectedDivision]);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["requisitions", selectedCustomer, selectedDivision],
+    queryKey: [
+      "requisitions",
+      selectedCustomer,
+      selectedDivision,
+      currentPage,
+      pageSize,
+    ],
     queryFn: () =>
-      getRequisitions({
-        customer_id: selectedCustomer || undefined,
-        division_id: selectedDivision || undefined,
-      }),
+      getRequisitions(
+        {
+          customer_id: selectedCustomer || undefined,
+          division_id: selectedDivision || undefined,
+        },
+        currentPage,
+        pageSize
+      ),
     staleTime: 5 * 60 * 1000,
   });
 
