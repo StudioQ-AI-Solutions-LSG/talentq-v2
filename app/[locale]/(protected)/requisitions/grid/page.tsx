@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
 import { useState, useEffect } from "react";
-import { useQuery } from '@tanstack/react-query';
-import { getRequisitions } from "../data";
+import { useQuery } from "@tanstack/react-query";
+import { getRequisitions } from "../services/data";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -10,11 +10,15 @@ import { Icon } from "@/components/ui/icon";
 import EmptyRequisition from "./components/empty";
 import RequisitionAction from "./components/requisition-action";
 import { useCandidatesStore } from "@/store/candidate.store";
-import Pagination, { PaginationButtonProps } from "../requisition-table-pagination";
-
+import Pagination, {
+  PaginationButtonProps,
+} from "../components/requisition-table-pagination";
 
 const RequisionGrid = () => {
-  const { selected_customer: selectedCustomer, selected_division: selectedDivision } = useCandidatesStore();
+  const {
+    selected_customer: selectedCustomer,
+    selected_division: selectedDivision,
+  } = useCandidatesStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
 
@@ -23,11 +27,22 @@ const RequisionGrid = () => {
   }, [selectedCustomer, selectedDivision]);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['requisitions', selectedCustomer, selectedDivision, currentPage, pageSize],
-    queryFn: () => getRequisitions({
-      customer_id: selectedCustomer || undefined,
-      division_id: selectedDivision || undefined
-    }, currentPage, pageSize),
+    queryKey: [
+      "requisitions",
+      selectedCustomer,
+      selectedDivision,
+      currentPage,
+      pageSize,
+    ],
+    queryFn: () =>
+      getRequisitions(
+        {
+          customer_id: selectedCustomer || undefined,
+          division_id: selectedDivision || undefined,
+        },
+        currentPage,
+        pageSize
+      ),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -43,8 +58,9 @@ const RequisionGrid = () => {
   const table: PaginationButtonProps = {
     currentPage: currentPage,
     totalPages: data?.total_pages || 1,
-    previousPage: () => setCurrentPage(prev => Math.max(1, prev - 1)),
-    nextPage: () => setCurrentPage(prev => Math.min(data?.total_pages || 1, prev + 1)),
+    previousPage: () => setCurrentPage((prev) => Math.max(1, prev - 1)),
+    nextPage: () =>
+      setCurrentPage((prev) => Math.min(data?.total_pages || 1, prev + 1)),
     getCanPreviousPage: () => currentPage > 1,
     getCanNextPage: () => currentPage < (data?.total_pages || 1),
     setPageIndex: (pageIndex: number) => setCurrentPage(pageIndex + 1),
@@ -53,7 +69,8 @@ const RequisionGrid = () => {
     },
   };
 
-  if (!requisitions.requisitions || requisitions.requisitions.length === 0) return <EmptyRequisition />;
+  if (!requisitions.requisitions || requisitions.requisitions.length === 0)
+    return <EmptyRequisition />;
   return (
     <>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
@@ -108,7 +125,9 @@ const RequisionGrid = () => {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-default-400 mb-1">End Date</div>
+                    <div className="text-xs text-default-400 mb-1">
+                      End Date
+                    </div>
                     <div className="text-xs text-default-600  font-medium">
                       {end_date}
                     </div>
@@ -154,14 +173,11 @@ const RequisionGrid = () => {
             </Card>
           )
         )}
-
       </div>
       {data && data.total_pages > 1 && (
         <>
           <div className="w-full flex justify-center mt-6">
-            <Pagination
-              table={table}
-            />
+            <Pagination table={table} />
           </div>
         </>
       )}

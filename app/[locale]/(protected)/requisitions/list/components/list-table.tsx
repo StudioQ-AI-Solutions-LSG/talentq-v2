@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { defaultRequisitions } from "../../data";
+import { defaultRequisitions } from "../../services/data";
 import { Requisition } from "../../types/requisitions.types";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,7 +41,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "@/i18n/routing";
-import EditRequisition from "../../edit-requisition";
+import EditRequisition from "../../components/edit-requisition";
 import DeleteConfirmationDialog from "@/components/delete-confirmation-dialog";
 import { Input } from "@/components/ui/input";
 
@@ -65,7 +65,8 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [editTaskOpen, setEditTaskOpen] = React.useState<boolean>(false);
-  const [deleteRequisition, setDeleteRequisition] = React.useState<boolean>(false);
+  const [deleteRequisition, setDeleteRequisition] =
+    React.useState<boolean>(false);
 
   const columns: ColumnDef<Requisition>[] = [
     {
@@ -90,7 +91,9 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
       header: "Start Date",
       cell: ({ row }) => {
         return (
-          <span className="whitespace-nowrap">{row.getValue("start_date")}</span>
+          <span className="whitespace-nowrap">
+            {row.getValue("start_date")}
+          </span>
         );
       },
     },
@@ -144,7 +147,9 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
               size="sm"
             />
             <div className=" text-xs text-default-500  font-medium mt-3 whitespace-nowrap">
-              <span className="whitespace-nowrap">{row.getValue("status")}</span>
+              <span className="whitespace-nowrap">
+                {row.getValue("status")}
+              </span>
             </div>
           </div>
         );
@@ -224,7 +229,7 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
       case "Closed":
         return "destructive";
     }
-  }
+  };
 
   return (
     <>
@@ -248,9 +253,9 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </TableHead>
                     );
                   })}
@@ -258,7 +263,8 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows && table.getRowModel().rows.length > 0 ? (
+              {table.getRowModel().rows &&
+              table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -323,10 +329,11 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
                   key={`basic-data-table-${pageIndex}`}
                   onClick={() => table.setPageIndex(pageIndex)}
                   size="icon"
-                  className={`w-8 h-8 ${table.getState().pagination.pageIndex === pageIndex
-                    ? "bg-default"
-                    : "bg-default-300 text-default"
-                    }`}
+                  className={`w-8 h-8 ${
+                    table.getState().pagination.pageIndex === pageIndex
+                      ? "bg-default"
+                      : "bg-default-300 text-default"
+                  }`}
                 >
                   {page + 1}
                 </Button>
