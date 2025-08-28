@@ -52,7 +52,7 @@ export function getMenuList(pathname: string, t: any): Group[] {
         },
         {
           id: "requisitions",
-          href: "/requistiions",
+          href: "/requisitions",
           label: t("requisitions"),
           active: pathname.startsWith("/requisitions"),
           icon: "heroicons:user-group",

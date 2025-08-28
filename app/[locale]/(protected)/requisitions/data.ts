@@ -1,11 +1,13 @@
 import { faker } from "@faker-js/faker";
+import { requisitionsService } from "./services/requitisions-service";
+import { RequisitionFilters } from "./types/requisitions.types";
 
 
-export const defaultProjects = [
+export const defaultRequisitions = [
   {
     id: "c06d48bf-7f35-4789-b71e-d80fee5b430f",
     title: "CRM Dashboard ",
-    projectLogo: "/images/project/p-2.png",
+    requisitionLogo: "/images/project/p-2.png",
     desc: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
     startDate: "2022-10-03",
     endDate: "2022-10-06",
@@ -29,7 +31,7 @@ export const defaultProjects = [
   {
     id: faker.string.uuid(),
     title: "Business Dashboard ",
-    projectLogo: "/images/project/p-2.png",
+    requisitionLogo: "/images/project/p-2.png",
     desc: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
     startDate: "2022-10-03",
     endDate: "2022-10-06",
@@ -53,7 +55,7 @@ export const defaultProjects = [
   {
     id: faker.string.uuid(),
     title: "Management Dashboard ",
-    projectLogo: "/images/project/p-2.png",
+    requisitionLogo: "/images/project/p-2.png",
     desc: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
     startDate: "2022-10-03",
     endDate: "2022-10-06",
@@ -77,7 +79,7 @@ export const defaultProjects = [
   {
     id: faker.string.uuid(),
     title: "Analytics Dashboard ",
-    projectLogo: "/images/project/p-2.png",
+    requisitionLogo: "/images/project/p-2.png",
     desc: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
     startDate: "2022-10-03",
     endDate: "2022-10-06",
@@ -98,11 +100,10 @@ export const defaultProjects = [
     ],
     remainingDays: 3
   },
-
   {
     id: faker.string.uuid(),
     title: "Marketing Dashboard ",
-    projectLogo: "/images/project/p-2.png",
+    requisitionLogo: "/images/project/p-2.png",
     desc: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
     startDate: "2022-10-03",
     endDate: "2022-10-06",
@@ -125,34 +126,33 @@ export const defaultProjects = [
   }
 ];
 
-
-export const getProjects = async () => {
-  return defaultProjects
+export const getRequisitions = async (filters?: RequisitionFilters, page: number = 1, limit: number = 8) => {
+  return await requisitionsService.getRequisitions(filters)
 }
 
-export const getProjectById = async (id: string) => {
-  return defaultProjects.find(project => project.id === id)
+export const getRequisitionById = async (id: string) => {
+  return defaultRequisitions.find(requisition => requisition.id === id)
 }
 
-interface ProjectNav {
+interface RequisitionNav {
   label: string
   href: string
   active: boolean
 }
 
-export function getProjectNav(pathname: string): ProjectNav[] {
+export function getRequisitionNav(pathname: string): RequisitionNav[] {
   return [
     {
       label: 'grid view',
-      href: "/app/projects/grid",
-      active: pathname === "/app/projects/grid",
+      href: "/requisitions/grid",
+      active: pathname === "/requisitions/grid",
     },
     {
       label: 'list view',
-      href: "/app/projects/list",
-      active: pathname === "/app/projects/list",
+      href: "/requisitions/list",
+      active: pathname === "/requisitions/list",
     }
   ]
 }
 
-export type Project = (typeof defaultProjects)[number]
+// export type Requisition = (typeof defaultRequisitions)[number]
