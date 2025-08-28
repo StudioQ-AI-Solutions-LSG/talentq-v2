@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ProjectWrapper from "./requisition-wrapper";
+import ProjectWrapper from "./components/requisition-wrapper";
 export const metadata: Metadata = {
   title: "Requisitions",
   description: "Requisitions Page",
