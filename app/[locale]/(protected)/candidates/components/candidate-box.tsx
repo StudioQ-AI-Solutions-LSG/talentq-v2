@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { Candidate } from "../types/candidates.types";
 import { MapPin } from "lucide-react";
+import { CandidatesStatusChip } from "./candidates-status-chip";
+import { get } from "http";
 
 // Fallback randoms
 const defaultSkills = [
@@ -28,12 +30,22 @@ const chipColors = [
   { bg: "bg-purple-100", text: "text-purple-600" },
 ];
 
+const DEFAULT_LOCATION = "Location Not Found";
+
 const toPascalCase = (str: string): string =>
   str ? str.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) : str;
 
 const capitalizeFirstLetter = (str: string): string => {
   if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+const getLocation = (location: string): string => {
+  if (!location) return DEFAULT_LOCATION;
+  const lastLocationPart = location.split(",").pop();
+  return lastLocationPart
+    ? capitalizeFirstLetter(lastLocationPart.trim())
+    : DEFAULT_LOCATION;
 };
 
 const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
@@ -48,10 +60,10 @@ const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
     candidate.requisition_name ||
     defaultRequisitions[Math.floor(Math.random() * defaultRequisitions.length)];
 
-  const randomSkills =
+  const candidateSkills =
     candidate.skills && candidate.skills.length > 0
       ? candidate.skills.slice(0, 2) // only 2 max
-      : defaultSkills.sort(() => 0.5 - Math.random()).slice(0, 2);
+      : [];
 
   return (
     <Link href={`/candidates/${candidate.id}`}>
@@ -93,8 +105,11 @@ const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
             </p>
             <div className="flex items-center mt-1 text-xs text-gray-500">
               <MapPin size={14} className="mr-1 text-gray-400" />
-              {randomLocation}
+              {getLocation(candidate.location)}
             </div>
+            <CandidatesStatusChip
+              selectedStatus={candidate.assignment_status}
+            />
           </div>
         </div>
 
@@ -115,17 +130,26 @@ const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
 
           {/* Skills chips */}
           <div className="flex flex-wrap gap-2 mt-3">
-            {randomSkills.map((skill, i) => {
-              const color = chipColors[i % chipColors.length];
-              return (
-                <span
-                  key={skill.id}
-                  className={`px-3 py-1 text-xs rounded-full ${color.bg} ${color.text} font-medium`}
-                >
-                  {skill.name}
-                </span>
-              );
-            })}
+            {candidateSkills.length > 0 ? (
+              candidateSkills.map((skill, i) => {
+                const color = chipColors[i % chipColors.length];
+                return (
+                  <span
+                    key={skill.id}
+                    className={`px-3 py-1 text-xs rounded-full ${color.bg} ${color.text} font-medium`}
+                  >
+                    {skill.name}
+                  </span>
+                );
+              })
+            ) : (
+              <span
+                key={3}
+                className={`px-3 py-1 text-xs rounded-full bg-purple-300 "text-purple-600" font-medium`}
+              >
+                {"No data available"}
+              </span>
+            )}
           </div>
 
           {/* Rate */}

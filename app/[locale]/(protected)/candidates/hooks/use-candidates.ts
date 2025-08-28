@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCandidatesStore } from "@/store/candidate.store";
 import candidateService from "../services/candidates-service";
+import { useAuthStore } from "@/store/auth.store";
 
 export const useCandidates = () => {
   const {
@@ -13,11 +14,13 @@ export const useCandidates = () => {
     page_size,
   } = useCandidatesStore();
 
+  const { selectedDivision, selectedCustomer } = useAuthStore.getState();
+
   const queryParams = {
-    selected_division,
-    selected_customer,
+    selected_division: selectedDivision || "",
+    selected_customer: selectedCustomer || "",
     requisition_position_id,
-    status,
+    status, // Change before sending the PR
     search_criteria,
     page,
     page_size,
