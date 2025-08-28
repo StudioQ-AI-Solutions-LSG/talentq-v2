@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { requisitionsService } from "./services/requitisions-service";
-import { RequisitionFilters } from "./types/requisitions.types";
+import { requisitionsService } from "./requitisions-service";
+import { RequisitionFilters } from "../types/requisitions.types";
 
 
 export const defaultRequisitions = [

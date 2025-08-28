@@ -5,7 +5,7 @@ import CreateRequisition from "./create-requisition";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/components/navigation";
-import { getRequisitionNav } from "./data";
+import { getRequisitionNav } from "../services/data";
 
 const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState<boolean>(false);

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import EditProject from "../../edit-requisition";
+import EditRequisition from "../../components/edit-requisition";
 import DeleteConfirmationDialog from "@/components/delete-confirmation-dialog";
 import { Eye, MoreVertical, SquarePen, Trash2 } from "lucide-react";
 import {
@@ -10,14 +10,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { defaultRequisitions } from "../../data";
+import { defaultRequisitions } from "../../services/data";
 import { Link } from "@/i18n/routing";
 const ProjectAction = () => {
   const [editTaskOpen, setEditTaskOpen] = useState<boolean>(false);
   const [deleteProject, setDeleteProject] = useState<boolean>(false);
   return (
     <>
-      <EditProject open={editTaskOpen} setOpen={setEditTaskOpen} />
+      <EditRequisition open={editTaskOpen} setOpen={setEditTaskOpen} />
       <DeleteConfirmationDialog
         open={deleteProject}
         onClose={() => setDeleteProject(false)}
