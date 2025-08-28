@@ -15,7 +15,7 @@ import {
 import { Icon } from "@/components/ui/icon"
 import Image from "next/image";
 import { Link } from '@/i18n/routing';
-import { useRouter } from "@/i18n/routing";
+import { useRouter } from '@/components/navigation';
 import { useAuthStore } from "@/store/auth.store";
 import { useMemo, useCallback } from "react";
 
