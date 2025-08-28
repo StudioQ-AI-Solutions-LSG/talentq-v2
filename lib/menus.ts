@@ -20,7 +20,7 @@ export type Menu = {
   icon: any;
   submenus: Submenu[];
   id: string;
-  
+
 };
 
 export type Group = {
@@ -53,7 +53,7 @@ export function getMenuList(pathname: string, t: any): Group[] {
         },
         {
           id: "requisitions",
-          href: "/requistiions",
+          href: "/requisitions",
           label: t("requisitions"),
           active: pathname.startsWith("/requisitions"),
           icon: "heroicons:user-group",
