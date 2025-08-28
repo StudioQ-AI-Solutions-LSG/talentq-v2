@@ -1,7 +1,7 @@
 import { redirect } from "@/components/navigation";
 
 const RequisitionsPage = () => {
-  redirect({ href: "/app/requisitions/grid", locale: "en" });
+  redirect({ href: "/requisitions/grid", locale: "en" });
   return null;
 };
 
