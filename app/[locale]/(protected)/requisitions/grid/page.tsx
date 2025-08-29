@@ -47,7 +47,7 @@ const RequisionGrid = () => {
   });
 
   const progress = 90;
-  const remainingDays = 3;
+
   const requisitionLogo = "/images/project/p-2.png";
 
   if (isLoading) return <div>Loading...</div>;
@@ -165,7 +165,7 @@ const RequisionGrid = () => {
                   <div className="flex-none">
                     <div className="flex items-center gap-1 bg-destructive/10 text-destructive rounded-full px-2 py-0.5 text-xs mt-1">
                       <Icon icon="heroicons-outline:clock" />
-                      {remainingDays} days left
+                      {status}
                     </div>
                   </div>
                 </div>

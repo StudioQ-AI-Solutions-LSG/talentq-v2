@@ -6,11 +6,43 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/components/navigation";
 import { getRequisitionNav } from "../services/data";
+import { RequisitionFilter } from "./requisition-filter";
+import { getRequisitions } from "../services/data";
 
 const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
   const pathname = usePathname();
   const menus = getRequisitionNav(pathname);
+
+  const [search, setSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [params, setParams] = useState<any>({
+    search_key: "",
+    status: [],
+  });
+  const [selectedRequisitionId, setSelectedRequisitionId] = useState<string | null>(null);
+
+  let statusRequisitions: any[] = [];
+  getRequisitions(params, 1, 8).then((res) => {
+    console.log({ res })
+    statusRequisitions = res.requisitions.map((item) => ({
+      id: item.id,
+      label: item.status,
+      value: item.status,
+    }));
+  });
+  const handleSearchBar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleStatusChange = (status: string[]) => {
+    setSelectedStatus(status);
+    setParams({
+      ...params,
+      status: status,
+    });
+  };
 
   return (
     <div>
@@ -39,7 +71,13 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
             </Button>
           ))}
 
-          <Button className="flex-none bg-card text-default-600 hover:ring-0 hover:ring-transparent hover:bg-default hover:text-default-foreground">
+          <Button
+            className={cn(
+              "flex-none bg-card text-default-600 hover:ring-0 hover:ring-transparent hover:bg-default hover:text-default-foreground",
+              { "bg-default text-default-foreground": showFilters }
+            )}
+            onClick={() => setShowFilters(!showFilters)}
+          >
             <Filter className="w-3.5 h-3.5 me-1" />
             <span>Filters</span>
           </Button>
@@ -49,6 +87,19 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
           </Button>
         </div>
       </div>
+      {showFilters && (
+        <RequisitionFilter
+          search={search}
+          handleSearchBar={handleSearchBar}
+          statusRequisitions={statusRequisitions}
+          selectedStatus={selectedStatus}
+          handleStatusChange={handleStatusChange}
+          setSearch={setSearch}
+          setParams={setParams}
+          setSelectedRequisitionId={setSelectedRequisitionId}
+          setSelectedStatus={setSelectedStatus}
+        />
+      )}
       {children}
     </div>
   );

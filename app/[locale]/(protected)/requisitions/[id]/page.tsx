@@ -20,11 +20,11 @@ import MessageListItem from "@/components/project/message-list-item";
 import ActivityItem from "@/components/project/activity";
 import TeamTable from "@/components/project/team-table";
 import NotesCalendar from "@/components/project/notes-calendar";
-import { getProjectById } from "../services/data";
+import { getRequisitionById } from "../services/data";
 import { Alert } from "@/components/ui/alert";
 
 const SinglePage = async ({ params: { id } }: { params: { id: string } }) => {
-  const project = await getProjectById(id);
+  const project = await getRequisitionById(id);
   if (!project)
     return <Alert color="destructive"> project id is not valid</Alert>;
   return (

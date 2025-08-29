@@ -46,7 +46,14 @@ const RequisitionList = () => {
 
   return (
     <div>
-      <ListTable requisitions={requisitions.requisitions} />
+      <ListTable requisitions={requisitions.requisitions}
+        pagination={{
+          currentPage: currentPage || 1,
+          totalPages: data?.total_pages || 1,
+          totalItems: data?.total || 0,
+          pageSize: pageSize || 8
+        }}
+        onPageChange={(newPage: number) => setCurrentPage(newPage)} />
     </div>
   );
 };

@@ -43,9 +43,20 @@ import {
 import { Link } from "@/i18n/routing";
 import EditRequisition from "../../components/edit-requisition";
 import DeleteConfirmationDialog from "@/components/delete-confirmation-dialog";
+
+interface ListTableProps {
+  requisitions: Requisition[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    pageSize: number;
+  };
+  onPageChange: (page: number) => void;
+}
 import { Input } from "@/components/ui/input";
 
-const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
+const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) => {
   // Validación de seguridad para evitar errores
   if (!requisitions || !Array.isArray(requisitions)) {
     return (
@@ -253,9 +264,9 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     );
                   })}
@@ -264,7 +275,7 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows &&
-              table.getRowModel().rows.length > 0 ? (
+                table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -301,48 +312,48 @@ const ListTable = ({ requisitions }: { requisitions: Requisition[] }) => {
                   type="number"
                   className="w-16 px-2"
                   defaultValue={table.getState().pagination.pageIndex + 1}
+                  value={pagination.currentPage}
                   onChange={(e) => {
                     const pageNumber = e.target.value
-                      ? Number(e.target.value) - 1
-                      : 0;
+                      ? Number(e.target.value)
+                      : 1;
                     table.setPageIndex(pageNumber);
+                    onPageChange(pageNumber);
                   }}
                 />
               </div>
               <div className="text-sm font-medium text-default-600">
-                Page {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.getPageCount()}
+                Page {pagination.currentPage} of {pagination.totalPages}
               </div>
             </div>
             <div className="flex items-center gap-2 flex-none">
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+                onClick={() => onPageChange(pagination.currentPage - 1)}
+                disabled={pagination.currentPage <= 1}
                 className="w-8 h-8"
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
-              {table.getPageOptions().map((page, pageIndex) => (
+              {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
                 <Button
-                  key={`basic-data-table-${pageIndex}`}
-                  onClick={() => table.setPageIndex(pageIndex)}
+                  key={`page-${page}`}
+                  onClick={() => onPageChange(page)}
                   size="icon"
-                  className={`w-8 h-8 ${
-                    table.getState().pagination.pageIndex === pageIndex
-                      ? "bg-default"
-                      : "bg-default-300 text-default"
-                  }`}
+                  className={`w-8 h-8 ${pagination.currentPage === page
+                    ? "bg-default"
+                    : "bg-default-300 text-default"
+                    }`}
                 >
-                  {page + 1}
+                  {page}
                 </Button>
               ))}
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+                onClick={() => onPageChange(pagination.currentPage + 1)}
+                disabled={pagination.currentPage >= pagination.totalPages}
                 className="w-8 h-8"
               >
                 <ChevronRight className="w-4 h-4" />
