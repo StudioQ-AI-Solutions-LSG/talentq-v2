@@ -1,13 +1,13 @@
-"use client";
+'use client'
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Filter, List, Plus } from "lucide-react";
 import CreateRequisition from "./create-requisition";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/components/navigation";
 import { getRequisitionNav } from "../services/data";
 import { RequisitionFilter } from "./requisition-filter";
-import { getRequisitions } from "../services/data";
+import React from "react";
 
 const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -17,31 +17,84 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
 
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
   const [params, setParams] = useState<any>({
     search_key: "",
     status: [],
   });
   const [selectedRequisitionId, setSelectedRequisitionId] = useState<string | null>(null);
 
-  let statusRequisitions: any[] = [];
-  getRequisitions(params, 1, 8).then((res) => {
-    console.log({ res })
-    statusRequisitions = res.requisitions.map((item) => ({
-      id: item.id,
-      label: item.status,
-      value: item.status,
-    }));
-  });
+
+  const statusRequisitions = [
+    { id: "1", label: "Active", value: "Active" },
+    { id: "2", label: "In Progress", value: "In Progress" },
+    { id: "3", label: "Pending", value: "Pending" },
+    { id: "4", label: "Closed", value: "Closed" },
+    { id: "5", label: "Closed By Customer", value: "Closed By Customer" },
+    { id: "6", label: "New", value: "New" },
+  ];
+
+
+  const refreshData = () => {
+    console.log('Recargando datos con filtros:', params, 'página:', currentPage);
+  };
+
   const handleSearchBar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+    const searchValue = e.target.value;
+    setSearch(searchValue);
+    setCurrentPage(1);
+
+    const newParams = {
+      ...params,
+      search_key: searchValue,
+    };
+    setParams(newParams);
+
+    setTimeout(() => refreshData(), 500);
   };
 
   const handleStatusChange = (status: string[]) => {
     setSelectedStatus(status);
-    setParams({
+    setCurrentPage(1);
+    const newParams = {
       ...params,
       status: status,
+    };
+    setParams(newParams);
+
+    refreshData();
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setSelectedStatus([]);
+    setCurrentPage(1); 
+    setParams({
+      search_key: "",
+      status: [],
     });
+    setSelectedRequisitionId(null);
+
+    refreshData();
+  };
+
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    refreshData();
+  };
+
+  // Crear objeto con todos los filtros y funciones
+  const filterContext = {
+    filters: params,
+    search: search,
+    selectedStatus: selectedStatus,
+    currentPage: currentPage,
+    pageSize: pageSize,
+    refreshData: refreshData,
+    clearFilters: handleClearFilters,
+    onPageChange: handlePageChange,
   };
 
   return (
@@ -87,6 +140,8 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
           </Button>
         </div>
       </div>
+
+      {/* Componente de filtro integrado */}
       {showFilters && (
         <RequisitionFilter
           search={search}
@@ -100,7 +155,9 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
           setSelectedStatus={setSelectedStatus}
         />
       )}
-      {children}
+
+      {/* Pasar filtros como props a children */}
+      {React.cloneElement(children as React.ReactElement, { filterContext })}
     </div>
   );
 };

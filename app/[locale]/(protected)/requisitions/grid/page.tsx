@@ -13,24 +13,42 @@ import { useCandidatesStore } from "@/store/candidate.store";
 import Pagination, {
   PaginationButtonProps,
 } from "../components/requisition-table-pagination";
-
-const RequisionGrid = () => {
+const RequisionGrid = ({ filterContext }: { filterContext?: any }) => {
   const {
     selected_customer: selectedCustomer,
     selected_division: selectedDivision,
   } = useCandidatesStore();
+  
+  // Usar el contexto de filtros si está disponible, sino usar estado local
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
+
+  // Sincronizar con el contexto de filtros del wrapper
+  useEffect(() => {
+    if (filterContext?.currentPage) {
+      setCurrentPage(filterContext.currentPage);
+    }
+    if (filterContext?.pageSize) {
+      setPageSize(filterContext.pageSize);
+    }
+  }, [filterContext?.currentPage, filterContext?.pageSize]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCustomer, selectedDivision]);
 
-  const { data, isLoading, error } = useQuery({
+  const filters = {
+    customer_id: selectedCustomer || undefined,
+    division_id: selectedDivision || undefined,
+    search_criteria: filterContext?.filters?.search_key || undefined,
+    status: filterContext?.selectedStatus?.[0] || undefined,
+  };
+
+
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: [
       "requisitions",
-      selectedCustomer,
-      selectedDivision,
+      filters,
       currentPage,
       pageSize,
     ],
@@ -46,6 +64,19 @@ const RequisionGrid = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+  useEffect(() => {
+    if (filterContext?.filters) {
+      console.log('Grid - Refetch por cambio de filtros');
+      refetch();
+    }
+  }, [filterContext?.filters, refetch]);
+
+
+  useEffect(() => {
+    console.log('Grid - Refetch por cambio de página:', currentPage);
+    refetch();
+  }, [currentPage, refetch]);
+
   const progress = 90;
 
   const requisitionLogo = "/images/project/p-2.png";
@@ -55,15 +86,22 @@ const RequisionGrid = () => {
 
   const requisitions = data || { requisitions: [] };
 
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    if (filterContext?.onPageChange) {
+      filterContext.onPageChange(page);
+    }
+  };
+
   const table: PaginationButtonProps = {
     currentPage: currentPage,
     totalPages: data?.total_pages || 1,
-    previousPage: () => setCurrentPage((prev) => Math.max(1, prev - 1)),
-    nextPage: () =>
-      setCurrentPage((prev) => Math.min(data?.total_pages || 1, prev + 1)),
+    previousPage: () => handlePageChange(Math.max(1, currentPage - 1)),
+    nextPage: () => handlePageChange(Math.min(data?.total_pages || 1, currentPage + 1)),
     getCanPreviousPage: () => currentPage > 1,
     getCanNextPage: () => currentPage < (data?.total_pages || 1),
-    setPageIndex: (pageIndex: number) => setCurrentPage(pageIndex + 1),
+    setPageIndex: (pageIndex: number) => handlePageChange(pageIndex + 1),
     pagination: {
       pageIndex: currentPage - 1,
     },
@@ -163,7 +201,7 @@ const RequisionGrid = () => {
                   </div> */}
                   </div>
                   <div className="flex-none">
-                    <div className="flex items-center gap-1 bg-destructive/10 text-destructive rounded-full px-2 py-0.5 text-xs mt-1">
+                    <div className="flex items-center gap-1 bg-primary/10 text-destructive rounded-full px-2 py-0.5 text-xs mt-1">
                       <Icon icon="heroicons-outline:clock" />
                       {status}
                     </div>
