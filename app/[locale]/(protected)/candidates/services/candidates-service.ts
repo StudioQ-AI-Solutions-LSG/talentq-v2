@@ -12,7 +12,7 @@ export const candidateService = {
       });
 
       const queryString = queryParams.toString();
-      const url = `/candidate/assignment${
+      const url = `v2/candidate/assignment${
         queryString ? `?${queryString}` : ""
       }`;
       return await httpV2.get<Candidate[]>(url);

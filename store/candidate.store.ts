@@ -8,7 +8,7 @@ interface CandidateStore extends CandidateListParams {
   resetParams: () => void;
 }
 
-const DEFAULT_STATUS = "in_progress";
+// const DEFAULT_STATUS = "in_progress";
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 6;
 
@@ -19,7 +19,7 @@ export const useCandidatesStore = create<CandidateStore>()(
       selected_customer: "",
       selected_customer_name: "",
       requisition_position_id: "",
-      status: DEFAULT_STATUS,
+      status: [],
       search_criteria: "",
       page: DEFAULT_PAGE_NUMBER,
       page_size: DEFAULT_PAGE_SIZE,
@@ -35,7 +35,7 @@ export const useCandidatesStore = create<CandidateStore>()(
           selected_division: "",
           selected_customer: "",
           requisition_position_id: "",
-          status: DEFAULT_STATUS,
+          status: [],
           search_criteria: "",
           page: DEFAULT_PAGE_NUMBER,
           page_size: DEFAULT_PAGE_SIZE,

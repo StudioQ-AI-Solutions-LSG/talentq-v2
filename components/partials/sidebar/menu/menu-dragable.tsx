@@ -57,6 +57,7 @@ export function MenuDragAble() {
     const t = useTranslations("Menu")
     const pathname = usePathname();
     const menuList = getMenuList(pathname, t);
+
     const [config, setConfig] = useConfig()
     const collapsed = config.collapsed
 
@@ -65,6 +66,11 @@ export function MenuDragAble() {
     // for dnd 
     // reorder rows after drag & drop
     const [data, setData] = React.useState(menuList);
+
+    // Recalcula los menús cuando el pathname cambie
+    React.useEffect(() => {
+      setData(getMenuList(pathname, t));
+    }, [pathname, t]);
 
     const dataIds = React.useMemo<UniqueIdentifier[]>(
         () => data.flatMap(group => group.menus.map(menu => menu.id)), [data]

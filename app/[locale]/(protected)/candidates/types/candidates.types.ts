@@ -8,7 +8,7 @@ export interface CandidateListParams {
   selected_customer: string;
   selected_customer_name?: string;
   requisition_position_id: string | null;
-  status: string;
+  status: string[];
   search_criteria: string;
   page: number;
   page_size: number;
