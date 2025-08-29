@@ -75,10 +75,12 @@ type RequistiionsStatusFilterProps = {
     onChange: (ids: string[]) => void;
 };
 const statusStyles: Record<string, string> = {
+    "Active": "bg-green-100 text-green-600",
     "In Progress": "bg-blue-100 text-blue-600",
-    Closed: "bg-gray-200 text-gray-800",
+    "Pending": "bg-yellow-100 text-yellow-600",
+    "Closed": "bg-gray-200 text-gray-800",
     "Closed By Customer": "bg-red-100 text-red-700",
-    New: "bg-purple-100 text-purple-600",
+    "New": "bg-purple-100 text-purple-600",
 };
 
 const RequisitionsStatusFilter = ({

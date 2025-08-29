@@ -34,7 +34,7 @@ export const requisitionsService = {
         try {
             const params = new URLSearchParams();
 
-            // Required backend parameters
+            // Required backend parameters - CORREGIDO: estos parámetros deben ir siempre
             params.append('page', page.toString());
             params.append('page_size', limit.toString());
 
@@ -52,6 +52,8 @@ export const requisitionsService = {
             }
 
             console.log('URL request:', `/requisition/positions?${params.toString()}`);
+            console.log('Page:', page, 'Limit:', limit);
+            
             // HTTP call that returns JSON
             const response = await httpV2.get<RequisitionListResponse>(`/requisition/positions?${params.toString()}`);
 
