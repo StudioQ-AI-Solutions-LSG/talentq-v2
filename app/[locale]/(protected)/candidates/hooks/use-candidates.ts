@@ -14,11 +14,11 @@ export const useCandidates = () => {
     page_size,
   } = useCandidatesStore();
 
-  const { selectedDivision, selectedCustomer } = useAuthStore.getState();
+  const { selectedDivision } = useAuthStore.getState();
 
   const queryParams = {
     selected_division: selectedDivision || "",
-    selected_customer: selectedCustomer || "",
+    selected_customer,
     requisition_position_id,
     status, // Change before sending the PR
     search_criteria,

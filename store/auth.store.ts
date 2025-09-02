@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { User } from "@/app/[locale]/auth/login/types";
-import { Account, Division } from "@/types/accounts.types";
+import { Division } from "@/types/divisions.type";
 
 interface AuthState {
   token: string | null;
@@ -9,7 +9,6 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  selectedAccount: Account | null; // Cuenta seleccionada por el usuario
   selectedDivision: string | null; // Selected division by the user
   selectedCustomer: string | null; // Selected customer by the user
   divisions: Division[];
@@ -17,7 +16,6 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setError: (error: string | null) => void;
   setLoading: (isLoading: boolean) => void;
-  setSelectedAccount: (account: Account | null) => void; // Acción para establecer la cuenta seleccionada
   setSelectedDivision: (divisionId: string | null) => void;
   setSelectedCustomer: (customerId: string | null) => void;
   setDivisions: (divisions: Division[] | null) => void;
@@ -47,8 +45,6 @@ export const useAuthStore = create<AuthState>()(
 
       setLoading: (isLoading) => set({ isLoading }),
 
-      setSelectedAccount: (account) => set({ selectedAccount: account }), // Acción para establecer la cuenta seleccionada
-
       setSelectedDivision: (divisionId) =>
         set({ selectedDivision: divisionId }),
 
@@ -71,7 +67,9 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           isAuthenticated: false,
           error: null,
-          selectedAccount: null, // Limpiar la cuenta seleccionada al cerrar sesión
+          selectedDivision: null,
+          selectedCustomer: null,
+          divisions: [],
         }),
     }),
     {
@@ -81,7 +79,6 @@ export const useAuthStore = create<AuthState>()(
         token: state.token,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
-        selectedAccount: state.selectedAccount, // Persistir la cuenta seleccionada
         selectedDivision: state.selectedDivision, // Persist the selected division
         selectedCustomer: state.selectedCustomer, // Persist the selected customer
         divisions: state.divisions, // Persist the divisions

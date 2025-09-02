@@ -5,6 +5,7 @@ import type { LoginCredentials, User } from "../types";
 import { useAuthStore } from "@/store/auth.store";
 
 const getcConfigurations = (userProfile: User) => {
+  const TALENTQ_PLATFORM = "talentq";
   const customerIdentifier =
     userProfile?.general_properties?.talentq_configuration?.customer_identifier;
 
@@ -17,7 +18,7 @@ const getcConfigurations = (userProfile: User) => {
   const divisionList = userProfile?.division_list;
 
   const divisions = divisionList
-    ?.filter((division: any) => division.platform === "talentq")
+    ?.filter((division: any) => division.platform === TALENTQ_PLATFORM)
     .map((div: any) => {
       return {
         id: div.id,

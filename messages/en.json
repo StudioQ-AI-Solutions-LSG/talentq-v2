@@ -183,6 +183,7 @@
     
   },
   "Menu": {
+    "Menu": "Menu",
     "dashboard": "Dashboard",
     "candidates": "Candidates",
     "requisitions": "Requisitions",
