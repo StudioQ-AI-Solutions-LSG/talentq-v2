@@ -57,16 +57,6 @@ interface ListTableProps {
 import { Input } from "@/components/ui/input";
 
 const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) => {
-  // Validación de seguridad para evitar errores
-  if (!requisitions || !Array.isArray(requisitions)) {
-    return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <p>No requisitions data available.</p>
-        </CardContent>
-      </Card>
-    );
-  }
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -78,6 +68,7 @@ const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) =
   const [editTaskOpen, setEditTaskOpen] = React.useState<boolean>(false);
   const [deleteRequisition, setDeleteRequisition] =
     React.useState<boolean>(false);
+
 
   const columns: ColumnDef<Requisition>[] = [
     {
@@ -212,6 +203,7 @@ const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) =
       },
     },
   ];
+
   const table = useReactTable({
     data: requisitions,
     columns,
@@ -230,6 +222,19 @@ const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) =
       rowSelection,
     },
   });
+
+
+  // Validación de seguridad para evitar errores
+  if (!requisitions || !Array.isArray(requisitions)) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center">
+          <p>No requisitions data available.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
 
   const getColor = (status: string) => {
     switch (status) {

@@ -13,25 +13,44 @@ import { useCandidatesStore } from "@/store/candidate.store";
 import Pagination, {
   PaginationButtonProps,
 } from "../components/requisition-table-pagination";
-const RequisionGrid = ({ filterContext }: { filterContext?: any }) => {
+import { useSearchParams } from 'next/navigation';
+
+const RequisionGrid = () => {
   const {
     selected_customer: selectedCustomer,
     selected_division: selectedDivision,
   } = useCandidatesStore();
-  
+
   // Usar el contexto de filtros si está disponible, sino usar estado local
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
+  const searchParams = useSearchParams();
 
-  // Sincronizar con el contexto de filtros del wrapper
+  const getCurrentPage = () => {
+    const page = searchParams.get('page');
+    return page ? parseInt(page, 10) : 1;
+  };
+
+  const getPageSize = () => {
+    const size = searchParams.get('pageSize');
+    return size ? parseInt(size, 10) : 8;
+  };
+
+  const getSearchKey = () => {
+    return searchParams.get('search_key') || undefined;
+  };
+
+  const getSelectedStatus = () => {
+    const status = searchParams.get('status');
+    return status ? [status] : [];
+  };
+
   useEffect(() => {
-    if (filterContext?.currentPage) {
-      setCurrentPage(filterContext.currentPage);
-    }
-    if (filterContext?.pageSize) {
-      setPageSize(filterContext.pageSize);
-    }
-  }, [filterContext?.currentPage, filterContext?.pageSize]);
+    const urlPage = getCurrentPage();
+    const urlPageSize = getPageSize();
+    setCurrentPage(urlPage);
+    setPageSize(urlPageSize);
+  }, [searchParams]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -40,8 +59,8 @@ const RequisionGrid = ({ filterContext }: { filterContext?: any }) => {
   const filters = {
     customer_id: selectedCustomer || undefined,
     division_id: selectedDivision || undefined,
-    search_criteria: filterContext?.filters?.search_key || undefined,
-    status: filterContext?.selectedStatus?.[0] || undefined,
+    search_criteria: getSearchKey(),
+    status: getSelectedStatus()[0] || undefined,
   };
 
 
@@ -65,11 +84,9 @@ const RequisionGrid = ({ filterContext }: { filterContext?: any }) => {
   });
 
   useEffect(() => {
-    if (filterContext?.filters) {
-      console.log('Grid - Refetch por cambio de filtros');
-      refetch();
-    }
-  }, [filterContext?.filters, refetch]);
+    console.log('Grid - Refetch por cambio de filtros');
+    refetch();
+  }, [searchParams, refetch]);
 
 
   useEffect(() => {
@@ -89,9 +106,10 @@ const RequisionGrid = ({ filterContext }: { filterContext?: any }) => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    if (filterContext?.onPageChange) {
-      filterContext.onPageChange(page);
-    }
+    // Aquí podrías actualizar la URL si quieres
+    // const newSearchParams = new URLSearchParams(searchParams);
+    // newSearchParams.set('page', page.toString());
+    // router.push(`?${newSearchParams.toString()}`);
   };
 
   const table: PaginationButtonProps = {
