@@ -3,16 +3,14 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
+  CommandSeparator
 } from "@/components/ui/command";
 import { Dialog } from "@/components/ui/dialog";
 import {
@@ -91,17 +89,9 @@ export default function DivisionsSwitcher({
                   className
                 )}
               >
-                <Avatar className="">
-                  <AvatarImage
-                    height={24}
-                    width={24}
-                    src="/images/avatar/av-1.jpg"
-                    alt={"User"}
-                    className="grayscale"
-                  />
-
-                  <AvatarFallback>{}</AvatarFallback>
-                </Avatar>
+                <div className="">
+                  <ChevronsUpDown className="ml-auto h-5 w-5 shrink-0  text-default-500 dark:text-default-700" />
+                </div>
               </Button>
             ) : (
               <Button
@@ -134,10 +124,6 @@ export default function DivisionsSwitcher({
         <PopoverContent className="w-[200px] p-0">
           <Command>
             <CommandList>
-              <CommandInput
-                placeholder="Search division..."
-                className=" placeholder:text-xs"
-              />
               <CommandEmpty>No division found.</CommandEmpty>
               {groups.map((group) => (
                 <CommandGroup key={group.label} heading={group.label}>
