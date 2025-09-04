@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from 'next/navigation';
 import { getRequisitions } from "../services/data";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,61 +15,42 @@ import Pagination, {
   PaginationButtonProps,
 } from "../components/requisition-table-pagination";
 import { useSearchParams } from 'next/navigation';
+import { RequisitionCandidates } from "../components/requisition-candidate";
 
 const RequisionGrid = () => {
+  const router = useRouter();
   const {
     selected_customer: selectedCustomer,
     selected_division: selectedDivision,
   } = useCandidatesStore();
 
-  // Usar el contexto de filtros si está disponible, sino usar estado local
+  // Use the filter context if available, otherwise use local state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
   const searchParams = useSearchParams();
 
-  const getCurrentPage = () => {
-    const page = searchParams.get('page');
-    return page ? parseInt(page, 10) : 1;
-  };
 
-  const getPageSize = () => {
-    const size = searchParams.get('pageSize');
-    return size ? parseInt(size, 10) : 8;
-  };
-
-  const getSearchKey = () => {
-    return searchParams.get('search_key') || undefined;
-  };
-
-  const getSelectedStatus = () => {
-    const status = searchParams.get('status');
-    return status ? [status] : [];
-  };
+  // Get values from the URL
+  const searchKey = searchParams.get('search_key') || undefined;
+  const statusFilter = searchParams.get('status') || undefined;
+  const currentPageFromUrl = parseInt(searchParams.get('page') || '1', 10);
 
   useEffect(() => {
-    const urlPage = getCurrentPage();
-    const urlPageSize = getPageSize();
-    setCurrentPage(urlPage);
-    setPageSize(urlPageSize);
-  }, [searchParams]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCustomer, selectedDivision]);
-
-  const filters = {
-    customer_id: selectedCustomer || undefined,
-    division_id: selectedDivision || undefined,
-    search_criteria: getSearchKey(),
-    status: getSelectedStatus()[0] || undefined,
-  };
+    // Reset page when customer or division changes
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('page', '1');
+    router.push(`?${newSearchParams.toString()}`);
+  }, [selectedCustomer, selectedDivision, router]);
 
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [
       "requisitions",
-      filters,
-      currentPage,
+      selectedCustomer,
+      selectedDivision,
+      searchKey,
+      statusFilter,
+      currentPageFromUrl,
       pageSize,
     ],
     queryFn: () =>
@@ -76,23 +58,16 @@ const RequisionGrid = () => {
         {
           customer_id: selectedCustomer || undefined,
           division_id: selectedDivision || undefined,
+          search_criteria: searchKey,
+          status: statusFilter,
         },
-        currentPage,
+        currentPageFromUrl,
         pageSize
       ),
     staleTime: 5 * 60 * 1000,
   });
 
-  useEffect(() => {
-    console.log('Grid - Refetch por cambio de filtros');
-    refetch();
-  }, [searchParams, refetch]);
 
-
-  useEffect(() => {
-    console.log('Grid - Refetch por cambio de página:', currentPage);
-    refetch();
-  }, [currentPage, refetch]);
 
   const progress = 90;
 
@@ -103,26 +78,71 @@ const RequisionGrid = () => {
 
   const requisitions = data || { requisitions: [] };
 
-
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    // Aquí podrías actualizar la URL si quieres
-    // const newSearchParams = new URLSearchParams(searchParams);
-    // newSearchParams.set('page', page.toString());
-    // router.push(`?${newSearchParams.toString()}`);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('page', page.toString());
+    router.push(`?${newSearchParams.toString()}`);
+  };
+
+  const paginationState = {
+    pageIndex: currentPageFromUrl - 1,
+    pageSize: pageSize,
   };
 
   const table: PaginationButtonProps = {
-    currentPage: currentPage,
-    totalPages: data?.total_pages || 1,
-    previousPage: () => handlePageChange(Math.max(1, currentPage - 1)),
-    nextPage: () => handlePageChange(Math.min(data?.total_pages || 1, currentPage + 1)),
-    getCanPreviousPage: () => currentPage > 1,
-    getCanNextPage: () => currentPage < (data?.total_pages || 1),
-    setPageIndex: (pageIndex: number) => handlePageChange(pageIndex + 1),
-    pagination: {
-      pageIndex: currentPage - 1,
+    currentPage: paginationState.pageIndex + 1,
+    totalPages: data?.total_pages ?? 1,
+    previousPage: () => {
+      const newPage = Math.max(1, currentPageFromUrl - 1);
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('page', newPage.toString());
+
+      console.log('⬅️ previousPage - newPage:', newPage);
+      console.log('⬅️ previousPage - newSearchParams:', newSearchParams.toString());
+
+      try {
+        router.push(`?${newSearchParams.toString()}`);
+        console.log('✅ router.push completed successfully');
+      } catch (error) {
+        console.error('❌ Error in router.push:', error);
+      }
     },
+    nextPage: () => {
+      const newPage = Math.min(data?.total_pages || 1, currentPageFromUrl + 1);
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('page', newPage.toString());
+
+      console.log('➡️ nextPage - newPage:', newPage);
+      console.log('➡️ nextPage - newSearchParams:', newSearchParams.toString());
+
+      try {
+        router.push(`?${newSearchParams.toString()}`);
+        console.log('✅ router.push completed successfully');
+      } catch (error) {
+        console.error('❌ Error in router.push:', error);
+      }
+    },
+    getCanPreviousPage: () => paginationState.pageIndex > 0,
+    getCanNextPage: () =>
+      paginationState.pageIndex < (data?.total_pages ?? 1) - 1,
+    setPageIndex: (pageIndex: number) => {
+      const newPage = pageIndex + 1; // Convertir de 0-based a 1-based
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('page', newPage.toString());
+
+      console.log('🔍 setPageIndex - pageIndex:', pageIndex);
+      console.log('�� setPageIndex - newPage:', newPage);
+      console.log('�� setPageIndex - newSearchParams:', newSearchParams.toString());
+      console.log('🔍 setPageIndex - router:', router);
+
+      try {
+        router.push(`?${newSearchParams.toString()}`);
+        console.log('✅ router.push completed successfully');
+      } catch (error) {
+        console.error('❌ Error in router.push:', error);
+      }
+    },
+    pagination: paginationState,
   };
 
   if (!requisitions.requisitions || requisitions.requisitions.length === 0)
@@ -200,23 +220,7 @@ const RequisionGrid = () => {
                     <div className="text-default-400  text-sm font-normal mb-3">
                       Candidates
                     </div>
-                    {/* <div className="flex items-center -space-x-1">
-                    {assignee?.map((user, index) => (
-                      <Avatar
-                        key={`user-${index}`}
-                        className="h-6 w-6 shadow-none border-none bg-transparent hover:bg-transparent"
-                      >
-                        <AvatarImage src={user.image} />
-                        <AvatarFallback>
-                          {" "}
-                          {user.name.charAt(0) + user.name.charAt(1)}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))}
-                    <div className="bg-card text-default-900  text-xs ring-2 ring-default-100  rounded-full h-6 w-6 flex flex-col justify-center items-center">
-                      +2
-                    </div>
-                  </div> */}
+                    <RequisitionCandidates positionId={id} maxVisible={3} />
                   </div>
                   <div className="flex-none">
                     <div className="flex items-center gap-1 bg-primary/10 text-destructive rounded-full px-2 py-0.5 text-xs mt-1">

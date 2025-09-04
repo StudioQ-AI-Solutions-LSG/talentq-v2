@@ -46,17 +46,10 @@ import DeleteConfirmationDialog from "@/components/delete-confirmation-dialog";
 
 interface ListTableProps {
   requisitions: Requisition[];
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-    pageSize: number;
-  };
-  onPageChange: (page: number) => void;
 }
 import { Input } from "@/components/ui/input";
 
-const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) => {
+const ListTable = ({ requisitions }: ListTableProps) => {
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -210,7 +203,6 @@ const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) =
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -222,7 +214,6 @@ const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) =
       rowSelection,
     },
   });
-
 
   // Validación de seguridad para evitar errores
   if (!requisitions || !Array.isArray(requisitions)) {
@@ -309,20 +300,19 @@ const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) =
               )}
             </TableBody>
           </Table>
-          <div className="flex items-center justify-end py-4 px-10">
+          {/* <div className="flex items-center justify-end py-4 px-10">
             <div className="flex-1 flex items-center gap-3">
               <div className=" flex gap-2 items-center">
                 <div className="text-sm font-medium text-default-60">Go </div>
                 <Input
                   type="number"
                   className="w-16 px-2"
-                  defaultValue={table.getState().pagination.pageIndex + 1}
+                  defaultValue={pagination.currentPage}
                   value={pagination.currentPage}
                   onChange={(e) => {
                     const pageNumber = e.target.value
                       ? Number(e.target.value)
                       : 1;
-                    table.setPageIndex(pageNumber);
                     onPageChange(pageNumber);
                   }}
                 />
@@ -364,7 +354,7 @@ const ListTable = ({ requisitions, pagination, onPageChange }: ListTableProps) =
                 <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </>
