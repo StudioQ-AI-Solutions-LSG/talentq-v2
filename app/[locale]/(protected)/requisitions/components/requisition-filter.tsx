@@ -9,12 +9,9 @@ interface RequisitionFilterProps {
     search: string;
     handleSearchBar: (e: React.ChangeEvent<HTMLInputElement>) => void;
     statusRequisitions: any[];
-    selectedStatus: any[];
-    handleStatusChange: (status: any[]) => void;
-    setSearch: (search: string) => void;
-    setParams: (params: any) => void;
-    setSelectedRequisitionId: (id: string | null) => void;
-    setSelectedStatus: (status: any[]) => void;
+    selectedStatus: string | undefined;
+    handleStatusChange: (status: string) => void;
+    handleClearFilters: () => void;
 }
 
 export const RequisitionFilter = ({
@@ -23,10 +20,7 @@ export const RequisitionFilter = ({
     statusRequisitions,
     selectedStatus,
     handleStatusChange,
-    setSearch,
-    setParams,
-    setSelectedRequisitionId,
-    setSelectedStatus,
+    handleClearFilters,
 }: RequisitionFilterProps) => {
     return (
         <div className="flex items-center gap-3 w-full mt-7">
@@ -47,15 +41,7 @@ export const RequisitionFilter = ({
                 onChange={handleStatusChange}
             />
             <button
-                onClick={() => {
-                    setSearch("");
-                    setParams({
-                        search_key: "",
-                        status: [],
-                    });
-                    setSelectedRequisitionId(null);
-                    setSelectedStatus([]);
-                }}
+                onClick={handleClearFilters}
                 className="text-sm px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 transition-colors duration-200"
             >
                 Clear
@@ -71,8 +57,8 @@ type StatusFilter = {
 };
 type RequistiionsStatusFilterProps = {
     statuses: StatusFilter[];
-    selected_status_ids: string[];
-    onChange: (ids: string[]) => void;
+    selected_status_ids: string | undefined;
+    onChange: (id: string) => void;
 };
 const statusStyles: Record<string, string> = {
     "Active": "bg-green-100 text-green-600",
@@ -90,16 +76,16 @@ const RequisitionsStatusFilter = ({
 }: RequistiionsStatusFilterProps) => {
     const [open, setOpen] = React.useState(false);
 
-    const toggleValue = (id: string) => {
-        if (selected_status_ids.includes(id)) {
-            onChange(selected_status_ids.filter((item) => item !== id));
+    const selectValue = (id: string) => {
+        if (selected_status_ids === id) {
+            onChange("");
         } else {
-            onChange([...selected_status_ids, id]);
+            onChange(id);
         }
     };
 
-    const selectedStatusObjects = statuses.filter((s) =>
-        selected_status_ids.includes(s.value)
+    const selectedStatusObject = statuses.find((s) =>
+        s.value === selected_status_ids
     );
 
     return (
@@ -116,23 +102,14 @@ const RequisitionsStatusFilter = ({
                             }`}
                     >
                         <div className="flex flex-wrap gap-1 items-center max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap">
-                            {selectedStatusObjects.length > 0 ? (
-                                selectedStatusObjects.length <= 2 ? (
-                                    selectedStatusObjects.map((status) => (
-                                        <span
-                                            key={status.id}
-                                            className={`text-xs rounded-full px-2 py-0.5 ${statusStyles[status.label] ??
-                                                "bg-gray-100 text-gray-700"
-                                                }`}
-                                        >
-                                            {status.label}
-                                        </span>
-                                    ))
-                                ) : (
-                                    <span className="text-gray-700 text-sm">
-                                        {selectedStatusObjects.length} selected
-                                    </span>
-                                )
+                            {selectedStatusObject ? (
+                                <span
+                                    className={`text-xs rounded-full px-2 py-0.5 ${statusStyles[selectedStatusObject.label] ??
+                                        "bg-gray-100 text-gray-700"
+                                        }`}
+                                >
+                                    {selectedStatusObject.label}
+                                </span>
                             ) : (
                                 <span className="text-gray-400 text-xs">Select Status...</span>
                             )}
@@ -150,8 +127,8 @@ const RequisitionsStatusFilter = ({
                             className="flex items-center space-x-2 cursor-pointer px-2 py-2 hover:bg-blue-50 rounded-md"
                         >
                             <Checkbox
-                                checked={selected_status_ids.includes(item.value)}
-                                onCheckedChange={() => toggleValue(item.value)}
+                                checked={selected_status_ids === item.value}
+                                onCheckedChange={() => selectValue(item.value)}
                             />
                             <span className="text-sm text-gray-800">{item.label}</span>
                         </label>

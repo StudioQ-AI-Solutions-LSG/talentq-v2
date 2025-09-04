@@ -1,4 +1,5 @@
 'use client'
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Filter, List, Plus } from "lucide-react";
@@ -7,16 +8,18 @@ import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/components/navigation";
 import { getRequisitionNav } from "../services/data";
 import { RequisitionFilter } from "./requisition-filter";
-import React from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const menus = getRequisitionNav(pathname);
 
   const [search, setSearch] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
   const [params, setParams] = useState<any>({
@@ -24,6 +27,7 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     status: [],
   });
   const [selectedRequisitionId, setSelectedRequisitionId] = useState<string | null>(null);
+
 
 
   const statusRequisitions = [
@@ -45,47 +49,55 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     setSearch(searchValue);
     setCurrentPage(1);
 
-    const newParams = {
-      ...params,
-      search_key: searchValue,
-    };
-    setParams(newParams);
+    // Create new URL params
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('search_key', searchValue);
+    newSearchParams.set('page', '1');
 
-    setTimeout(() => refreshData(), 500);
+    //URL Update
+    router.push(`?${newSearchParams.toString()}`);
   };
 
-  const handleStatusChange = (status: string[]) => {
+  const handleStatusChange = (status: string) => {
     setSelectedStatus(status);
     setCurrentPage(1);
-    const newParams = {
-      ...params,
-      status: status,
-    };
-    setParams(newParams);
 
-    refreshData();
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (status) {
+      newSearchParams.set('status', status);
+    } else {
+      newSearchParams.delete('status');
+    }
+
+    newSearchParams.set('page', '1');
+    router.push(`?${newSearchParams.toString()}`);
   };
 
   const handleClearFilters = () => {
     setSearch("");
-    setSelectedStatus([]);
-    setCurrentPage(1); 
+    setSelectedStatus("");
+    setCurrentPage(1);
     setParams({
       search_key: "",
-      status: [],
+      status: "",
     });
     setSelectedRequisitionId(null);
 
-    refreshData();
+    // Clean all of the URL params
+    router.push(window.location.pathname);
   };
-
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    refreshData();
+
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('page', page.toString());
+
+    router.push(`?${newSearchParams.toString()}`);
   };
 
-  // Crear objeto con todos los filtros y funciones
+  // Create object with all of the filters and functions
   const filterContext = {
     filters: params,
     search: search,
@@ -96,6 +108,16 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     clearFilters: handleClearFilters,
     onPageChange: handlePageChange,
   };
+
+  useEffect(() => {
+    const urlSearch = searchParams.get('search_key') || '';
+    const urlStatus = searchParams.get('status') || '';
+    const urlPage = parseInt(searchParams.get('page') || '1', 10);
+
+    setSearch(urlSearch);
+    setSelectedStatus(urlStatus);
+    setCurrentPage(urlPage);
+  }, [searchParams]);
 
   return (
     <div>
@@ -149,10 +171,7 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
           statusRequisitions={statusRequisitions}
           selectedStatus={selectedStatus}
           handleStatusChange={handleStatusChange}
-          setSearch={setSearch}
-          setParams={setParams}
-          setSelectedRequisitionId={setSelectedRequisitionId}
-          setSelectedStatus={setSelectedStatus}
+          handleClearFilters={handleClearFilters}
         />
       )}
 

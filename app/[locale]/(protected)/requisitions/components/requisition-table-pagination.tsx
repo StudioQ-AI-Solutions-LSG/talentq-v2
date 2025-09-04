@@ -21,6 +21,10 @@ export interface PaginationButtonProps {
 }
 
 const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
+
+    console.log('🔍 TablePagination - table object:', table);
+    console.log('🔍 TablePagination - setPageIndex function:', table.setPageIndex);
+
     const currentPage = table.currentPage;
     const totalPages = table.totalPages;
 
@@ -40,12 +44,15 @@ const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
     };
 
     return (
-        <div className="flex items-center justify-center py-4 px-10">
+        <div className="flex items-center justify-end py-4 px-10">
             <div className="flex items-center gap-2 flex-none">
                 <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => table.previousPage()}
+                    onClick={() => {
+                        console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
+                        table.previousPage();
+                    }}
                     disabled={!table.getCanPreviousPage()}
                     className="w-8 h-8 cursor-pointer"
                 >
@@ -59,11 +66,15 @@ const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
                         <React.Fragment key={page}>
                             {showEllipsis && <span className="px-1">…</span>}
                             <Button
-                                onClick={() => table.setPageIndex(page)}
+                                onClick={() => {
+                                    console.log('🖱️ Button clicked - page:', page);
+                                    console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
+                                    table.setPageIndex(page);
+                                }}
                                 size="icon"
                                 className="w-8 h-8 cursor-pointer"
                                 variant={
-                                    table.pagination.pageIndex === page ? "default" : "outline"
+                                    (currentPage - 1) === page ? "default" : "outline" // Convertir currentPage a 0-based
                                 }
                             >
                                 {page + 1}
@@ -74,7 +85,11 @@ const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
                 <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => table.nextPage()}
+                    // onClick={() => table.nextPage()}
+                    onClick={() => {
+                        console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
+                        table.nextPage();
+                    }}
                     disabled={!table.getCanNextPage()}
                     className="w-8 h-8 cursor-pointer"
                 >
