@@ -1,0 +1,103 @@
+import { Button } from "@/components/ui/button";
+import { Table } from "@tanstack/react-table";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
+
+interface DataTablePaginationProps {
+    table: Table<any>;
+}
+
+export interface PaginationButtonProps {
+    currentPage: number;
+    totalPages: number;
+    previousPage: () => void;
+    nextPage: () => void;
+    getCanPreviousPage: () => boolean;
+    getCanNextPage: () => boolean;
+    setPageIndex: (pageIndex: number) => void;
+    pagination: {
+        pageIndex: number;
+    };
+}
+
+const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
+
+    console.log('🔍 TablePagination - table object:', table);
+    console.log('🔍 TablePagination - setPageIndex function:', table.setPageIndex);
+
+    const currentPage = table.currentPage;
+    const totalPages = table.totalPages;
+
+    const getPageButtons = () => {
+        const pages = new Set<number>();
+
+        pages.add(0); // First page
+        pages.add(totalPages - 1); // Last page
+
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+            if (i > 0 && i < totalPages - 1) {
+                pages.add(i);
+            }
+        }
+
+        return Array.from(pages).sort((a, b) => a - b);
+    };
+
+    return (
+        <div className="flex items-center justify-end py-4 px-10">
+            <div className="flex items-center gap-2 flex-none">
+                <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                        console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
+                        table.previousPage();
+                    }}
+                    disabled={!table.getCanPreviousPage()}
+                    className="w-8 h-8 cursor-pointer"
+                >
+                    <ChevronLeft className="w-4 h-4" />
+                </Button>
+                {getPageButtons().map((page, idx, arr) => {
+                    const prev = arr[idx - 1];
+                    const showEllipsis = prev !== undefined && page - prev > 1;
+
+                    return (
+                        <React.Fragment key={page}>
+                            {showEllipsis && <span className="px-1">…</span>}
+                            <Button
+                                onClick={() => {
+                                    console.log('🖱️ Button clicked - page:', page);
+                                    console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
+                                    table.setPageIndex(page);
+                                }}
+                                size="icon"
+                                className="w-8 h-8 cursor-pointer"
+                                variant={
+                                    (currentPage - 1) === page ? "default" : "outline" // Convertir currentPage a 0-based
+                                }
+                            >
+                                {page + 1}
+                            </Button>
+                        </React.Fragment>
+                    );
+                })}
+                <Button
+                    variant="outline"
+                    size="icon"
+                    // onClick={() => table.nextPage()}
+                    onClick={() => {
+                        console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
+                        table.nextPage();
+                    }}
+                    disabled={!table.getCanNextPage()}
+                    className="w-8 h-8 cursor-pointer"
+                >
+                    <ChevronRight className="w-4 h-4" />
+                </Button>
+            </div>
+        </div>
+    );
+};
+
+export default TablePagination;

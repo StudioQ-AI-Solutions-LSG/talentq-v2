@@ -2,7 +2,7 @@
   "Index": {
     "title": "Hello world!"
   },
-    "Auth": {
+  "Auth": {
     "login": {
       "title": "Sign in",
       "subtitle": "Sign in to your account to start using TalentQ V2",
@@ -26,7 +26,7 @@
       }
     }
   },
-    "Common": {
+  "Common": {
     "copyright": {
       "text": "© {year} TalentQ. All rights reserved."
     },
@@ -180,7 +180,6 @@
     "view_less": "View Less",
     "add_to_cart": "Add to Cart",
     "see_more": "See More"
-    
   },
   "Menu": {
     "Menu": "Menu",
@@ -258,14 +257,14 @@
     "input": "Input",
     "textarea": "Textarea",
     "select": "Select",
-    "reactSelect":"React Select",
+    "reactSelect": "React Select",
     "slider": "Slider",
     "switch": "Switch",
     "inputGroup": "Input Group",
-    "inputLayout":"Input Layout",
-    "inputMask":"Input Mask",
-    "inputFile":"File Input",
-    "formValidation":"Form Validation",
+    "inputLayout": "Input Layout",
+    "inputMask": "Input Mask",
+    "inputFile": "File Input",
+    "formValidation": "Form Validation",
     "radio": "Radio",
     "checkbox": "Checkbox",
     "inputOtp": "Input Otp",

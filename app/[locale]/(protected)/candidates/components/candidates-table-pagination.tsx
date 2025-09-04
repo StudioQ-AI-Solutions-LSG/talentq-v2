@@ -63,7 +63,7 @@ const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
                 size="icon"
                 className="w-8 h-8 cursor-pointer"
                 variant={
-                  table.pagination.pageIndex === page ? "default" : "outline"
+                  (currentPage - 1) === page ? "default" : "outline" // Convertir currentPage a 0-based
                 }
               >
                 {page + 1}

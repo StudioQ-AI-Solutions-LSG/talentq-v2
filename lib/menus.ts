@@ -20,7 +20,7 @@ export type Menu = {
   icon: any;
   submenus: Submenu[];
   id: string;
-  
+
 };
 
 export type Group = {
@@ -51,6 +51,14 @@ export function getMenuList(pathname: string, t: any): Group[] {
           icon: "heroicons:user-group",
           submenus: [],
         },
+        {
+          id: "requisitions",
+          href: "/requisitions",
+          label: t("requisitions"),
+          active: pathname.startsWith("/requisitions"),
+          icon: "heroicons:user-group",
+          submenus: [],
+        },
       ],
     },
   ];
@@ -74,6 +82,14 @@ export function getHorizontalMenuList(pathname: string, t: any): Group[] {
           href: "/candidates",
           label: t("candidates"),
           active: pathname.startsWith("/candidates"),
+          icon: "heroicons:user-group",
+          submenus: [],
+        },
+        {
+          id: "requisitions",
+          href: "/requisitions",
+          label: t("requisitions"),
+          active: pathname.startsWith("/requisitions"),
           icon: "heroicons:user-group",
           submenus: [],
         },
