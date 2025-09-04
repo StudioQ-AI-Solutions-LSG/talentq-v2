@@ -32,7 +32,7 @@ export type Group = {
 export function getMenuList(pathname: string, t: any): Group[] {
   return [
     {
-      groupLabel: t(""),
+      groupLabel: t("Menu"),
       id: "dashboard",
       menus: [
         {

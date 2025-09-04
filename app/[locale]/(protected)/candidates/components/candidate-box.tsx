@@ -1,27 +1,10 @@
-import { Link } from "@/i18n/routing";
-import Image from "next/image";
 import { Card } from "@/components/ui/card";
-import { useTranslations } from "next-intl";
-import { Candidate } from "../types/candidates.types";
+import { Link } from "@/i18n/routing";
 import { MapPin } from "lucide-react";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { Candidate } from "../types/candidates.types";
 import { CandidatesStatusChip } from "./candidates-status-chip";
-import { get } from "http";
-
-// Fallback randoms
-const defaultSkills = [
-  { id: "1", name: "Teamwork", type: "soft", candidate_skill_id: "1" },
-  { id: "2", name: "Communication", type: "soft", candidate_skill_id: "2" },
-  { id: "3", name: "Problem Solving", type: "soft", candidate_skill_id: "3" },
-  { id: "4", name: "React", type: "tech", candidate_skill_id: "4" },
-  { id: "5", name: "Node.js", type: "tech", candidate_skill_id: "5" },
-];
-
-const defaultLocations = ["New York, USA", "Bogotá, Colombia", "Remote"];
-const defaultRequisitions = [
-  "Frontend Developer",
-  "Project Manager",
-  "Data Analyst",
-];
 
 // Chip color palette
 const chipColors = [
@@ -31,6 +14,7 @@ const chipColors = [
 ];
 
 const DEFAULT_LOCATION = "Location Not Found";
+const DEFAULT_REQUISITION = "Requisition Not Found";
 
 const toPascalCase = (str: string): string =>
   str ? str.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) : str;
@@ -51,14 +35,8 @@ const getLocation = (location: string): string => {
 const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
   const t = useTranslations("EcommerceApp");
 
-  // Random helpers
-  const randomLocation =
-    candidate.location ||
-    defaultLocations[Math.floor(Math.random() * defaultLocations.length)];
-
-  const randomRequisition =
-    candidate.requisition_name ||
-    defaultRequisitions[Math.floor(Math.random() * defaultRequisitions.length)];
+  const requisitionDescription =
+    candidate.requisition_name || DEFAULT_REQUISITION;
 
   const candidateSkills =
     candidate.skills && candidate.skills.length > 0
@@ -119,7 +97,7 @@ const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
           <div className="bg-gray-100 px-3 py-1 rounded-md text-xs text-gray-600 shadow-sm inline-block">
             Requisition:{" "}
             <span className="font-medium text-gray-900">
-              {randomRequisition}
+              {requisitionDescription}
             </span>
           </div>
 
