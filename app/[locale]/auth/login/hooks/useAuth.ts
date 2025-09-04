@@ -4,6 +4,42 @@ import { authService } from "../services/auth.service";
 import type { LoginCredentials, User } from "../types";
 import { useAuthStore } from "@/store/auth.store";
 
+const getcConfigurations = (userProfile: User) => {
+  const TALENTQ_PLATFORM = "talentq";
+  const customerIdentifier =
+    userProfile?.general_properties?.talentq_configuration?.customer_identifier;
+
+  const defaultDivisionIdConfiguration =
+    customerIdentifier?.studioq_organization_default_division_id;
+
+  const defaultCustomerIdConfiguration =
+    customerIdentifier?.studioq_organization_customer_id;
+
+  const divisionList = userProfile?.division_list;
+
+  const divisions = divisionList
+    ?.filter((division: any) => division.platform === TALENTQ_PLATFORM)
+    .map((div: any) => {
+      return {
+        id: div.id,
+        label: div.name,
+        value: div.name,
+      };
+    });
+
+  const defaultDivision = !defaultDivisionIdConfiguration
+    ? divisions?.length > 0
+      ? divisions[0].id
+      : ""
+    : defaultDivisionIdConfiguration;
+
+  return {
+    divisions: divisions || [],
+    defaultDivision: defaultDivision || "",
+    defaultCustomerId: defaultCustomerIdConfiguration || "",
+  };
+};
+
 export const useAuth = () => {
   const router = useRouter();
   const params = useParams<{ locale: string }>();
@@ -25,9 +61,14 @@ export const useAuth = () => {
 
         // Then fetch the complete profile
         const profile = await authService.getProfile();
-
+        const { divisions, defaultDivision, defaultCustomerId } =
+          getcConfigurations(profile);
         // Update the user in the store with the profile
         useAuthStore.getState().setUser(profile);
+
+        useAuthStore.getState().setSelectedDivision(defaultDivision);
+        useAuthStore.getState().setSelectedCustomer(defaultCustomerId);
+        useAuthStore.getState().setDivisions(divisions);
 
         return profile;
       } catch (error) {

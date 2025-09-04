@@ -27,6 +27,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "i.pravatar.cc",
       },
+      {
+        protocol: "https",
+        hostname: "studioq-storage.s3.amazonaws.com",
+      },
     ],
   },
 };

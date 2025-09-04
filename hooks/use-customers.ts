@@ -2,20 +2,20 @@ import { httpV2 } from "@/lib/api/axios";
 import { Account } from "@/types/accounts.types";
 import { useQuery } from "@tanstack/react-query";
 
-type AccountListParams = {
+type CustomerListParams = {
   selected_division?: string | null;
   page?: string;
   limit?: string;
 };
 
-export const useAccounts = (params: AccountListParams) => {
+export const useCustomers = (params: CustomerListParams) => {
   const {
-    data: accounts,
+    data: customers,
     isLoading: isFetching,
     error: queryError,
     refetch,
   } = useQuery({
-    queryKey: ["accounts"],
+    queryKey: ["customers", params],
     queryFn: async () => {
       const queryParams = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {
@@ -39,7 +39,7 @@ export const useAccounts = (params: AccountListParams) => {
   };
 
   return {
-    accounts: accounts ?? [],
+    customers: customers ?? [],
     isLoading: isFetching,
     error: queryError ? getErrorMessage(queryError) : null,
     refetch,

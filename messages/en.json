@@ -178,10 +178,12 @@
     "price": "price",
     "ratings": "ratings",
     "view_less": "View Less",
-    "add_to_cart": "Add to Cart"
+    "add_to_cart": "Add to Cart",
+    "see_more": "See More"
     
   },
   "Menu": {
+    "Menu": "Menu",
     "dashboard": "Dashboard",
     "candidates": "Candidates",
     "requisitions": "Requisitions",
