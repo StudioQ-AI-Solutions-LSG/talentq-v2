@@ -171,7 +171,7 @@ const ListTable = ({ requisitions }: ListTableProps) => {
                 className="py-2 border-b border-default-200 text-default-600 focus:bg-default focus:text-default-foreground rounded-none cursor-pointer"
                 asChild
               >
-                <Link href={`/requisitions/${defaultRequisitions[0].id}`}>
+                <Link href={`/requisitions/${row.original.id}`}>
                   <Eye className="w-3.5 h-3.5 me-1" />
                   View
                 </Link>
