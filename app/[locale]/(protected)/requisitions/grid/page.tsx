@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation';
+import { Link } from "@/i18n/routing";
 import { getRequisitions } from "../services/data";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -173,8 +174,9 @@ const RequisionGrid = () => {
             },
             index
           ) => (
-            <Card key={index}>
-              <CardHeader className="flex-row gap-1  items-center space-y-0">
+            <Link href={`/requisitions/${id}`} key={index}>
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow duration-200">
+                <CardHeader className="flex-row gap-1  items-center space-y-0">
                 <div className="flex-1 flex items-center gap-4">
                   <Avatar className="flex-none h-10 w-10 rounded bg-default-200 text-default hover:bg-default-200">
                     <AvatarImage src={requisitionLogo} />
@@ -187,7 +189,7 @@ const RequisionGrid = () => {
                     {custom_name}
                   </h3>
                 </div>
-                <RequisitionAction />
+                <RequisitionAction requisitionId={id} />
               </CardHeader>
               <CardContent>
                 <div className="text-default-600 text-sm">{position_name}</div>
@@ -230,7 +232,8 @@ const RequisionGrid = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+              </Card>
+            </Link>
           )
         )}
       </div>
