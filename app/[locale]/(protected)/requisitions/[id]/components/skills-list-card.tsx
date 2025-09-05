@@ -25,6 +25,7 @@ const SkillsListCard = ({ skills }: SkillsListCardProps) => {
         name: newSkillName.trim(),
         type: newSkillType,
         requisition_position_skill_id: `temp-${Date.now()}`,
+        is_mandatory: false,
       };
       setLocalSkills([...localSkills, newSkill]);
       setNewSkillName("");

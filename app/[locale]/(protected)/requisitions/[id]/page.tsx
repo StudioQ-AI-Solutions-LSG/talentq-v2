@@ -19,31 +19,36 @@ const mockRequisition: Requisition = {
       id: "skill-1",
       name: "React",
       type: "hard",
-      requisition_position_skill_id: "req-skill-1"
+      requisition_position_skill_id: "req-skill-1",
+      is_mandatory: false,
     },
     {
       id: "skill-2", 
       name: "TypeScript",
       type: "hard",
-      requisition_position_skill_id: "req-skill-2"
+      requisition_position_skill_id: "req-skill-2",
+      is_mandatory: false,
     },
     {
       id: "skill-3",
       name: "Node.js",
       type: "hard", 
-      requisition_position_skill_id: "req-skill-3"
+      requisition_position_skill_id: "req-skill-3",
+      is_mandatory: false,
     },
     {
       id: "skill-4",
       name: "Communication",
       type: "soft",
-      requisition_position_skill_id: "req-skill-4"
+      requisition_position_skill_id: "req-skill-4",
+      is_mandatory: false,
     },
     {
       id: "skill-5",
       name: "Teamwork",
       type: "soft",
-      requisition_position_skill_id: "req-skill-5"
+      requisition_position_skill_id: "req-skill-5",
+      is_mandatory: false,
     }
   ],
   status: "Active",

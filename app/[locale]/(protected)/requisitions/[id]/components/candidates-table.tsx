@@ -245,7 +245,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
       header: "Seniority",
       cell: ({ row }) => {
         return (
-          <Badge variant="secondary" className="text-xs">
+          <Badge color="secondary" className="text-xs">
             {row.getValue("seniority_name")}
           </Badge>
         );
@@ -271,12 +271,12 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
         return (
           <div className="flex flex-wrap gap-1">
             {skills.slice(0, 2).map((skill, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
+              <Badge key={index} color="secondary" className="text-xs">
                 {skill}
               </Badge>
             ))}
             {skills.length > 2 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge color="secondary" className="text-xs">
                 +{skills.length - 2}
               </Badge>
             )}
@@ -366,7 +366,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
         </CardHeader>
         <CardContent className="p-6 text-center">
           <div className="text-destructive">
-            Error loading candidates: {error.message}
+            Error loading candidates: {error}
           </div>
         </CardContent>
       </Card>

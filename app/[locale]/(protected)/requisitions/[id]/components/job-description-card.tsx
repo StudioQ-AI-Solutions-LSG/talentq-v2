@@ -144,7 +144,7 @@ What We Offer:
               <span className="text-sm font-medium text-info">
                 File uploaded: {uploadedFile.name}
               </span>
-              <Badge variant="secondary" className="ml-auto text-xs">
+              <Badge color="secondary" className="ml-auto text-xs">
                 {(uploadedFile.size / 1024).toFixed(1)} KB
               </Badge>
             </div>

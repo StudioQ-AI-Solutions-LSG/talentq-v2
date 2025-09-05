@@ -157,7 +157,7 @@ const RequisitionInfoCard = ({ requisition }: RequisitionInfoCardProps) => {
             <div className="flex items-center justify-between text-sm">
               <span className="text-default-600">Customer Confirmed:</span>
               <Badge
-                variant={requisition.was_confirmed_by_the_customer ? "default" : "secondary"}
+                color={requisition.was_confirmed_by_the_customer ? "default" : "secondary"}
                 className={requisition.was_confirmed_by_the_customer ? "bg-success/20 text-success" : ""}
               >
                 {requisition.was_confirmed_by_the_customer ? "Yes" : "No"}
@@ -166,7 +166,7 @@ const RequisitionInfoCard = ({ requisition }: RequisitionInfoCardProps) => {
             <div className="flex items-center justify-between text-sm">
               <span className="text-default-600">Organization Confirmed:</span>
               <Badge
-                variant={requisition.was_confirmed_by_the_organization ? "default" : "secondary"}
+                color={requisition.was_confirmed_by_the_organization ? "default" : "secondary"}
                 className={requisition.was_confirmed_by_the_organization ? "bg-success/20 text-success" : ""}
               >
                 {requisition.was_confirmed_by_the_organization ? "Yes" : "No"}
