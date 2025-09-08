@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/components/navigation";
 import { getRequisitionNav } from "../services/data";
 import { RequisitionFilter } from "./requisition-filter";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
 const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -25,9 +25,9 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     search_key: "",
     status: [],
   });
-  const [selectedRequisitionId, setSelectedRequisitionId] = useState<string | null>(null);
-
-
+  const [selectedRequisitionId, setSelectedRequisitionId] = useState<
+    string | null
+  >(null);
 
   const statusRequisitions = [
     { id: "1", label: "Active", value: "Active" },
@@ -38,9 +38,13 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     { id: "6", label: "New", value: "New" },
   ];
 
-
   const refreshData = () => {
-    console.log('Recargando datos con filtros:', params, 'página:', currentPage);
+    console.log(
+      "Recargando datos con filtros:",
+      params,
+      "página:",
+      currentPage
+    );
   };
 
   const handleSearchBar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,8 +54,8 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
 
     // Create new URL params
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('search_key', searchValue);
-    newSearchParams.set('page', '1');
+    newSearchParams.set("search_key", searchValue);
+    newSearchParams.set("page", "1");
 
     //URL Update
     router.push(`?${newSearchParams.toString()}`);
@@ -64,12 +68,12 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
     if (status) {
-      newSearchParams.set('status', status);
+      newSearchParams.set("status", status);
     } else {
-      newSearchParams.delete('status');
+      newSearchParams.delete("status");
     }
 
-    newSearchParams.set('page', '1');
+    newSearchParams.set("page", "1");
     router.push(`?${newSearchParams.toString()}`);
   };
 
@@ -91,7 +95,7 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     setCurrentPage(page);
 
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', page.toString());
+    newSearchParams.set("page", page.toString());
 
     router.push(`?${newSearchParams.toString()}`);
   };
@@ -109,9 +113,9 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    const urlSearch = searchParams.get('search_key') || '';
-    const urlStatus = searchParams.get('status') || '';
-    const urlPage = parseInt(searchParams.get('page') || '1', 10);
+    const urlSearch = searchParams.get("search_key") || "";
+    const urlStatus = searchParams.get("status") || "";
+    const urlPage = parseInt(searchParams.get("page") || "1", 10);
 
     setSearch(urlSearch);
     setSelectedStatus(urlStatus);
@@ -126,7 +130,6 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
           Requisitions
         </h4>
         <div className="flex items-center gap-4 flex-wrap">
-          {/* Filtro integrado a la izquierda */}
           <div className="flex items-center gap-3">
             <RequisitionFilter
               search={search}
@@ -137,8 +140,8 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
               handleClearFilters={handleClearFilters}
             />
           </div>
-          
-          {/* Botones de navegación y acciones */}
+
+          {/* Nav Buttons and Actions */}
           <div className="flex items-center gap-4">
             {menus?.map(({ label, href, active }, index) => (
               <Button
@@ -166,8 +169,7 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
-
-      {/* Pasar filtros como props a children */}
+      {/* Pass filters as props to children */}
       {React.cloneElement(children as React.ReactElement, { filterContext })}
     </div>
   );
