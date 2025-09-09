@@ -16,6 +16,7 @@ import { useRequisitionsFilter } from "./hooks/use-requisitions-filter";
 import { CandidatesStatusFilter } from "./components/candidates-status-filter";
 import { statusCandidates } from "@/lib/constants/candidates.constants";
 import CandidateList from "./components/candidates-list";
+import SiteBreadcrumb from "@/components/site-breadcrumb";
 
 const CandidateSection = () => {
   const [selectedRequisitionId, setSelectedRequisitionId] = React.useState<
@@ -76,12 +77,13 @@ const CandidateSection = () => {
 
   return (
     <div className="w-full">
-      <div className="py-4">
-        <div className="text-2xl font-medium text-default-900 mb-4">
+      <SiteBreadcrumb />
+      <div className="flex w-full flex-wrap items-center gap-4 mb-6">
+        <h4 className="flex-1 font-medium lg:text-2xl text-xl capitalize text-default-900">
           Candidates
-        </div>
-
-        <div className="flex items-center gap-3 w-full mt-7">
+        </h4>
+      </div>
+        <div className="flex items-center gap-3 w-full">
           <div className="relative">
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
               <FiSearch className="h-5 w-5" />
@@ -119,7 +121,6 @@ const CandidateSection = () => {
             Clear
           </button>
         </div>
-      </div>
       {candidates?.length > 0 ? (
         <CandidateList candidates={candidates} />
       ) : (
