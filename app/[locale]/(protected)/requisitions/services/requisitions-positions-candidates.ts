@@ -32,17 +32,43 @@ export interface RequisitionPositionCandidatesResponse {
     itemsTotal: number;
 }
 
-export const requisitionsPositionsCandidatesService = {
+export interface RequisitionPositionCandidatesParams {
+    page?: number;
+    page_size?: number;
+    status?: string;
+    customer_like?: string;
+    positionId: string;
+    selected_customer?: string;
+    selected_division?: string;
+}
 
-    getCandidatesByPositionId: async (positionId: string): Promise<RequisitionPositionCandidatesResponse> => {
+export const requisitionsPositionsCandidatesService = {
+    getCandidatesByPositionId: async (params: RequisitionPositionCandidatesParams): Promise<RequisitionPositionCandidatesResponse> => {
         try {
-            const response = await httpV2.get<RequisitionPositionCandidatesResponse>(
-                `/requisition/position/${positionId}/candidates`
-            );
-            // console.log("CANDIDATES: \n", response);
+            const { positionId, ...queryParams } = params;
+
+            const searchParams = new URLSearchParams();
+
+            searchParams.append('id', positionId);
+
+            Object.entries(queryParams).forEach(([key, value]) => {
+                if (value !== null && value !== undefined && value !== '' && value !== 'all') {
+                    searchParams.append(key, String(value));
+                }
+            });
+
+            const queryString = searchParams.toString();
+            const url = `/requisition/position/${positionId}/candidates?${queryString}`;
+
+            const response = await httpV2.get<RequisitionPositionCandidatesResponse>(url);
+            if (response.itemsTotal > 0) console.log("✅ CANDIDATES RESPONSE: \n", response);
             return response;
-        } catch (error) {
-            console.error('Error fetching candidates for position:', error);
+        } catch (error: any) {
+            console.error('❌ Error fetching candidates for position:', params.positionId);
+            console.error('❌ Error details:', error);
+            console.error('❌ Error response data:', error.response?.data);
+            console.error('❌ Error response status:', error.response?.status);
+            console.error('❌ Error response headers:', error.response?.headers);
             throw error;
         }
     }

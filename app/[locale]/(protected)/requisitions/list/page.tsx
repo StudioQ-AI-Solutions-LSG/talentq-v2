@@ -95,8 +95,6 @@ const RequisitionList = () => {
   };
 
   console.log('List - Data:', data);
-  console.log('List - Total pages:', data?.total_pages);
-  console.log('List - Should show pagination:', data && data.total_pages > 1);
 
   return (
     <div>

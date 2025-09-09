@@ -79,12 +79,6 @@ const RequisionGrid = () => {
 
   const requisitions = data || { requisitions: [] };
 
-  const handlePageChange = (page: number) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', page.toString());
-    router.push(`?${newSearchParams.toString()}`);
-  };
-
   const paginationState = {
     pageIndex: currentPageFromUrl - 1,
     pageSize: pageSize,
@@ -98,12 +92,8 @@ const RequisionGrid = () => {
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.set('page', newPage.toString());
 
-      console.log('⬅️ previousPage - newPage:', newPage);
-      console.log('⬅️ previousPage - newSearchParams:', newSearchParams.toString());
-
       try {
         router.push(`?${newSearchParams.toString()}`);
-        console.log('✅ router.push completed successfully');
       } catch (error) {
         console.error('❌ Error in router.push:', error);
       }
@@ -113,12 +103,8 @@ const RequisionGrid = () => {
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.set('page', newPage.toString());
 
-      console.log('➡️ nextPage - newPage:', newPage);
-      console.log('➡️ nextPage - newSearchParams:', newSearchParams.toString());
-
       try {
         router.push(`?${newSearchParams.toString()}`);
-        console.log('✅ router.push completed successfully');
       } catch (error) {
         console.error('❌ Error in router.push:', error);
       }
@@ -131,14 +117,8 @@ const RequisionGrid = () => {
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.set('page', newPage.toString());
 
-      console.log('🔍 setPageIndex - pageIndex:', pageIndex);
-      console.log('�� setPageIndex - newPage:', newPage);
-      console.log('�� setPageIndex - newSearchParams:', newSearchParams.toString());
-      console.log('🔍 setPageIndex - router:', router);
-
       try {
         router.push(`?${newSearchParams.toString()}`);
-        console.log('✅ router.push completed successfully');
       } catch (error) {
         console.error('❌ Error in router.push:', error);
       }
@@ -177,61 +157,61 @@ const RequisionGrid = () => {
             <Link href={`/requisitions/${id}`} key={index}>
               <Card className="cursor-pointer hover:shadow-lg transition-shadow duration-200">
                 <CardHeader className="flex-row gap-1  items-center space-y-0">
-                <div className="flex-1 flex items-center gap-4">
-                  <Avatar className="flex-none h-10 w-10 rounded bg-default-200 text-default hover:bg-default-200">
-                    <AvatarImage src={requisitionLogo} />
-                    <AvatarFallback className="uppercase">
-                      {" "}
-                      {custom_name.charAt(0) + custom_name.charAt(1)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-default-900 text-lg font-medium max-w-[210px] truncate text-center capitalize ">
-                    {custom_name}
-                  </h3>
-                </div>
-                <RequisitionAction requisitionId={id} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-default-600 text-sm">{position_name}</div>
-                <div className="flex gap-4 mt-6">
-                  <div>
-                    <div className="text-xs text-default-400 mb-1">
-                      Start Date
+                  <div className="flex-1 flex items-center gap-4">
+                    <Avatar className="flex-none h-10 w-10 rounded bg-default-200 text-default hover:bg-default-200">
+                      <AvatarImage src={requisitionLogo} />
+                      <AvatarFallback className="uppercase">
+                        {" "}
+                        {custom_name.charAt(0) + custom_name.charAt(1)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <h3 className="text-default-900 text-lg font-medium max-w-[210px] truncate text-center capitalize ">
+                      {custom_name}
+                    </h3>
+                  </div>
+                  <RequisitionAction requisitionId={id} />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-default-600 text-sm">{position_name}</div>
+                  <div className="flex gap-4 mt-6">
+                    <div>
+                      <div className="text-xs text-default-400 mb-1">
+                        Start Date
+                      </div>
+                      <div className="text-xs text-default-600  font-medium">
+                        {start_date}
+                      </div>
                     </div>
-                    <div className="text-xs text-default-600  font-medium">
-                      {start_date}
+                    <div>
+                      <div className="text-xs text-default-400 mb-1">
+                        End Date
+                      </div>
+                      <div className="text-xs text-default-600  font-medium">
+                        {end_date}
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-default-400 mb-1">
-                      End Date
+                  <div className="mt-1">
+                    <div className="text-end text-xs text-default-600 mb-1.5 font-medium">
+                      {progress}%
                     </div>
-                    <div className="text-xs text-default-600  font-medium">
-                      {end_date}
+                    <Progress value={progress} color="primary" size="sm" />
+                  </div>
+                  <div className="flex mt-5">
+                    <div className="flex-1">
+                      <div className="text-default-400  text-sm font-normal mb-3">
+                        Candidates
+                      </div>
+                      <RequisitionCandidates positionId={id} maxVisible={3} />
                     </div>
-                  </div>
-                </div>
-                <div className="mt-1">
-                  <div className="text-end text-xs text-default-600 mb-1.5 font-medium">
-                    {progress}%
-                  </div>
-                  <Progress value={progress} color="primary" size="sm" />
-                </div>
-                <div className="flex mt-5">
-                  <div className="flex-1">
-                    <div className="text-default-400  text-sm font-normal mb-3">
-                      Candidates
-                    </div>
-                    <RequisitionCandidates positionId={id} maxVisible={3} />
-                  </div>
-                  <div className="flex-none">
-                    <div className="flex items-center gap-1 bg-primary/10 text-destructive rounded-full px-2 py-0.5 text-xs mt-1">
-                      <Icon icon="heroicons-outline:clock" />
-                      {status}
+                    <div className="flex-none">
+                      <div className="flex items-center gap-1 bg-primary/10 text-destructive rounded-full px-2 py-0.5 text-xs mt-1">
+                        <Icon icon="heroicons-outline:clock" />
+                        {status}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
+                </CardContent>
               </Card>
             </Link>
           )
