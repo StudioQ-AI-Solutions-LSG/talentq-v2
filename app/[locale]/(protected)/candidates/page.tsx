@@ -87,7 +87,7 @@ const CandidateSection = () => {
               <FiSearch className="h-5 w-5" />
             </span>
             <Input
-              placeholder="Search by Name, Position, Location..."
+              placeholder="Search by Name and Position..."
               value={search}
               onChange={handleSearchBar}
               className="w-[350px] h-[40px] text-xs text-gray-900 placeholder:text-gray-400 pl-10 pr-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:text-white"
