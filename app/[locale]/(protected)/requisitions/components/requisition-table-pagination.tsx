@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
-
-interface DataTablePaginationProps {
-    table: Table<any>;
-}
 
 export interface PaginationButtonProps {
     currentPage: number;
