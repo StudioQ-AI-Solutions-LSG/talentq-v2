@@ -9,7 +9,7 @@ import { CandidatesStatusChip } from "./candidates-status-chip";
 // Chip color palette
 const chipColors = [
   { bg: "bg-green-100", text: "text-green-600" },
-  { bg: "bg-orange-100", text: "text-orange-600" },
+  { bg: "bg-blue-100", text: "text-blue-600" },
   { bg: "bg-purple-100", text: "text-purple-600" },
 ];
 
@@ -46,21 +46,16 @@ const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
   return (
     <Link href={`/candidates/${candidate.id}`}>
       <Card
-        className="group p-6 rounded-2xl shadow-md border border-gray-200 bg-white flex flex-col h-full 
-                   transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-pointer
-                   hover:border-gray-400"
+        className="group p-4 rounded-xl shadow-md border border-gray-200 bg-white flex flex-col h-full 
+             transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-pointer
+             hover:border-gray-400"
       >
         {/* Top section */}
         <div className="grid grid-cols-3 gap-4 items-center">
           {/* Profile photo */}
           <div className="col-span-1 flex justify-center">
-            <div
-              className="aspect-square w-28 max-w-[7rem] rounded-full overflow-hidden 
-               border-2 border-gray-800 shadow-md 
-               ring-1 ring-gray-600/40 
-               transition-all duration-300 
-               group-hover:scale-105 group-hover:shadow-lg"
-            >
+<div className="aspect-square w-24 max-w-[6rem] rounded-full overflow-hidden ...">
+
               <Image
                 width={112}
                 height={112}
@@ -78,7 +73,7 @@ const CandidateBox = ({ candidate }: { candidate: Candidate }) => {
                 " " +
                 toPascalCase(candidate.last_name)}
             </p>
-            <p className="text-sm font-medium text-[#FF6A3D] mt-1 truncate">
+            <p className="text-xs font-light uppercase text-gray-600 mt-0.5 tracking-wide truncate">
               {candidate.seniority_name + " " + candidate.role}
             </p>
             <div className="flex items-center mt-1 text-xs text-gray-500">
