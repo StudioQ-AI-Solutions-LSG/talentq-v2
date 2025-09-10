@@ -11,24 +11,28 @@ export const RequisitionCandidates = ({ positionId, maxVisible = 3 }: Requisitio
 
     if (isLoading) return <div>Loading candidates...</div>;
     if (error) return <div>Error loading candidates</div>;
-    if (!data?.items || data.items.length === 0) return null;
+    if (!data?.items || data.items.length === 0) {
+        return null;
+    }
 
     const visibleCandidates = data.items.slice(0, maxVisible);
     const remainingCount = data.items.length - maxVisible;
 
     return (
         <div className="flex items-center -space-x-1">
-            {visibleCandidates.map((candidate: RequisitionPositionCandidate) => (
-                <Avatar
-                    key={candidate.id}
-                    className="h-6 w-6 shadow-none border-none bg-transparent hover:bg-transparent"
-                >
-                    <AvatarImage src={`${candidate.id}`} />
-                    <AvatarFallback className="text-xs">
-                        {candidate.name.charAt(0) + candidate.name.charAt(1)}
-                    </AvatarFallback>
-                </Avatar>
-            ))}
+            {visibleCandidates.map((candidate: RequisitionPositionCandidate, index: number) => {
+                return (
+                    <Avatar
+                        key={candidate.id}
+                        className="h-6 w-6 shadow-none border-none bg-transparent hover:bg-transparent"
+                    >
+                        <AvatarImage src={candidate.photo || `/images/avatar/av-${index + 1}.svg`} />
+                        <AvatarFallback className="text-xs">
+                            {candidate.name ? candidate.name.charAt(0) + candidate.name.charAt(1) : '??'}
+                        </AvatarFallback>
+                    </Avatar>
+                );
+            })}
             {remainingCount > 0 && (
                 <div className="bg-card text-default-900 text-xs ring-2 ring-default-100 rounded-full h-6 w-6 flex flex-col justify-center items-center">
                     +{remainingCount}

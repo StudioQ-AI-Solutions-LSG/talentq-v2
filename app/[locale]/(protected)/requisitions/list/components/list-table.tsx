@@ -43,11 +43,11 @@ import {
 import { Link } from "@/i18n/routing";
 import EditRequisition from "../../components/edit-requisition";
 import DeleteConfirmationDialog from "@/components/delete-confirmation-dialog";
+import { RequisitionCandidates } from "../../components/requisition-candidate";
 
 interface ListTableProps {
   requisitions: Requisition[];
 }
-import { Input } from "@/components/ui/input";
 
 const ListTable = ({ requisitions }: ListTableProps) => {
 
@@ -101,35 +101,15 @@ const ListTable = ({ requisitions }: ListTableProps) => {
         );
       },
     },
-    // {
-    //   accessorKey: "assignee",
-    //   header: "Assignee",
-    //   cell: ({
-    //     row,
-    //   }: {
-    //     row: { getValue: (key: string) => { image: string }[] };
-    //   }) => {
-    //     const assignees = row.getValue("assignee");
-    //     return (
-    //       <div className="flex -space-x-1 rtl:space-x-reverse">
-    //         <div className="flex -space-x-1 rtl:space-x-reverse">
-    //           {assignees.map((item, index) => (
-    //             <Avatar
-    //               key={`user-${index}`}
-    //               className="h-6 w-6 shadow-none border-none bg-transparent hover:bg-transparent"
-    //             >
-    //               <AvatarImage src={item.image} />
-    //               <AvatarFallback>SC</AvatarFallback>
-    //             </Avatar>
-    //           ))}
-    //         </div>
-    //         <div className="bg-card text-default-900  text-xs ring-2 ring-default-100  rounded-full h-6 w-6 flex flex-col justify-center items-center">
-    //           +2
-    //         </div>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      accessorKey: "candidates",
+      header: "Candidates",
+      cell: ({ row }) => {
+        return (
+          <RequisitionCandidates positionId={row.original.id} maxVisible={3} />
+        );
+      },
+    },
     {
       accessorKey: "status",
       header: "Status",

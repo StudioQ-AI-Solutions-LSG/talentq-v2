@@ -23,16 +23,16 @@ export const RequisitionFilter = ({
     handleClearFilters,
 }: RequisitionFilterProps) => {
     return (
-        <div className="flex items-center gap-3 w-full mt-7">
+        <div className="flex items-center gap-3">
             <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <FiSearch className="h-5 w-5" />
+                    <FiSearch className="h-4 w-4" />
                 </span>
                 <Input
                     placeholder="Search by Customer, Status..."
                     value={search}
                     onChange={handleSearchBar}
-                    className="w-[350px] h-[40px] text-xs text-gray-900 placeholder:text-gray-400 pl-10 pr-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-[280px] h-[36px] text-xs text-gray-900 placeholder:text-gray-400 pl-9 pr-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
             </div>
             <RequisitionsStatusFilter
@@ -42,7 +42,7 @@ export const RequisitionFilter = ({
             />
             <button
                 onClick={handleClearFilters}
-                className="text-sm px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 transition-colors duration-200"
+                className="text-xs px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 transition-colors duration-200 h-[36px]"
             >
                 Clear
             </button>
@@ -93,9 +93,9 @@ const RequisitionsStatusFilter = ({
             <DropdownMenu open={open} onOpenChange={setOpen}>
                 <DropdownMenuTrigger asChild>
                     <button
-                        className={`w-[200px] h-[40px] pl-3 pr-4 py-2 border rounded-lg shadow-sm 
+                        className={`w-[180px] h-[36px] pl-3 pr-4 py-2 border rounded-lg shadow-sm 
                 flex items-center justify-between text-left transition-colors 
-                overflow-hidden focus:outline-none text-sm
+                overflow-hidden focus:outline-none text-xs
                 ${open
                                 ? "border-transparent ring-2 ring-primary"
                                 : "border-gray-300"

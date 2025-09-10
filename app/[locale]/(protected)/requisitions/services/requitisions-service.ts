@@ -51,9 +51,6 @@ export const requisitionsService = {
                 params.append('selected_division', filters.division_id);
             }
 
-            console.log('URL request:', `/requisition/positions?${params.toString()}`);
-            console.log('Page:', page, 'Limit:', limit);
-            
             // HTTP call that returns JSON
             const response = await httpV2.get<RequisitionListResponse>(`/requisition/positions?${params.toString()}`);
 
