@@ -125,22 +125,13 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <CreateRequisition open={open} setOpen={setOpen} />
-      <div className="flex w-full flex-wrap items-center gap-4 mb-6">
-        <h4 className="flex-1 font-medium lg:text-2xl text-xl capitalize text-default-900">
-          Requisitions
-        </h4>
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-3">
-            <RequisitionFilter
-              search={search}
-              handleSearchBar={handleSearchBar}
-              statusRequisitions={statusRequisitions}
-              selectedStatus={selectedStatus}
-              handleStatusChange={handleStatusChange}
-              handleClearFilters={handleClearFilters}
-            />
-          </div>
-
+      <div className="mb-6">
+        {/* Title and Actions Row */}
+        <div className="flex w-full items-center justify-between mb-4">
+          <h4 className="font-medium lg:text-2xl text-xl capitalize text-default-900">
+            Requisitions
+          </h4>
+          
           {/* Nav Buttons and Actions */}
           <div className="flex items-center gap-4">
             {menus?.map(({ label, href, active }, index) => (
@@ -166,6 +157,17 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
               <span>Add Requisition</span>
             </Button>
           </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <RequisitionFilter
+            search={search}
+            handleSearchBar={handleSearchBar}
+            statusRequisitions={statusRequisitions}
+            selectedStatus={selectedStatus}
+            handleStatusChange={handleStatusChange}
+            handleClearFilters={handleClearFilters}
+          />
         </div>
       </div>
 
