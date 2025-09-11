@@ -6,8 +6,15 @@ import type {
     CreateRequisitionRequest,
     UpdateRequisitionRequest,
     RequisitionFilters,
-    RequisitionStats
+    RequisitionStats,
+    AvailabilityOption
 } from "../types/requisitions.types";
+
+interface RequisitionDetailsParams {
+    id: string;
+    selected_customer?: string;
+    selected_division?: string;
+}
 
 // Helper function to convert backend response to frontend format
 const mapBackendResponseToFrontend = (backendResponse: RequisitionListResponse, page: number, pageSize: number): RequisitionListResponseLegacy => {
@@ -51,6 +58,9 @@ export const requisitionsService = {
                 params.append('selected_division', filters.division_id);
             }
 
+            console.log('URL request:', `/requisition/positions?${params.toString()}`);
+            console.log('Page:', page, 'Limit:', limit);
+
             // HTTP call that returns JSON
             const response = await httpV2.get<RequisitionListResponse>(`/requisition/positions?${params.toString()}`);
 
@@ -84,7 +94,7 @@ export const requisitionsService = {
      */
     createRequisition: async (data: CreateRequisitionRequest): Promise<Requisition> => {
         try {
-            const response = await http.post<Requisition>('/requisition/positions', data);
+            const response = await httpV2.post<Requisition>('/requisition/positions', data);
             return response;
         } catch (error) {
             console.error('Error creating requisition:', error);

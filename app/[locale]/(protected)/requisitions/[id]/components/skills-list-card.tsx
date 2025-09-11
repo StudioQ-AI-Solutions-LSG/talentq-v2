@@ -40,7 +40,7 @@ const SkillsListCard = ({ skills }: SkillsListCardProps) => {
   const getSkillTypeColor = (type: 'hard' | 'soft') => {
     return type === 'hard' 
       ? "bg-primary/20 text-primary border-primary/30" 
-      : "bg-secondary/20 text-secondary border-secondary/30";
+      : "bg-secondary/20 text-primary border-secondary/30";
   };
 
   const getSkillTypeIcon = (type: 'hard' | 'soft') => {
@@ -167,7 +167,7 @@ const SkillsListCard = ({ skills }: SkillsListCardProps) => {
                 <div className="flex items-center gap-2 mb-3">
                   <Icon
                     icon="heroicons:heart"
-                    className="w-4 h-4 text-secondary"
+                    className="w-4 h-4 text-primary"
                   />
                   <h4 className="text-sm font-semibold text-default-700">
                     Soft Skills ({softSkills.length})
@@ -181,7 +181,7 @@ const SkillsListCard = ({ skills }: SkillsListCardProps) => {
                     >
                       <Icon
                         icon={getSkillTypeIcon(skill.type)}
-                        className="w-3 h-3"
+                        className="w-3 h-3 text-default"
                       />
                       {skill.name}
                       <button
