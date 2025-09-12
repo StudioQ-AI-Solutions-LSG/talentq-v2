@@ -74,6 +74,8 @@ export const requisitionsPositionsCandidatesService = {
             console.error('❌ Error fetching candidates for position:', params.positionId);
             console.error('❌ Error details:', error);
             console.error('❌ Error response data:', error.response?.data);
+            console.error('❌ Error response status:', error.response?.status);
+            console.error('❌ Error response headers:', error.response?.headers);
             throw error;
         }
     }

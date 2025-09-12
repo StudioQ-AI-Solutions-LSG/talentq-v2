@@ -94,7 +94,7 @@ const RequisitionList = () => {
     pagination: paginationState,
   };
 
-  // console.log('List - Data:', data);
+  console.log('List - Data:', data);
 
   return (
     <div>
