@@ -32,7 +32,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Eye, MessageSquare, FileText, Download } from "lucide-react";
-import { RequisitionPositionCandidate } from "../../services/requisitions-positions-candidates";
+import { RequisitionPositionCandidate, CandidateSkill } from "../../services/requisitions-positions-candidates";
+import { useRequisitionCandidates } from "../../hooks/useRequisitionsPositionsCandidates";
 
 interface CandidatesTableProps {
   requisitionId: string;
@@ -48,7 +49,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Senior Developer",
     photo: "/images/avatar/av-1.svg",
     resume: "resume.pdf",
-    skills: ["React", "TypeScript", "Node.js"],
+    skills: [
+      { id: "1", name: "React", type: "hard", candidate_skill_id: "1" },
+      { id: "2", name: "TypeScript", type: "hard", candidate_skill_id: "2" },
+      { id: "3", name: "Node.js", type: "hard", candidate_skill_id: "3" }
+    ],
     location: "New York, NY",
     rate_type: "annual",
     birth_date: "1990-01-15",
@@ -74,7 +79,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Full Stack Developer",
     photo: "/images/avatar/av-2.svg",
     resume: "resume.pdf",
-    skills: ["Vue.js", "Python", "PostgreSQL"],
+    skills: [
+      { id: "4", name: "Vue.js", type: "hard", candidate_skill_id: "4" },
+      { id: "5", name: "Python", type: "hard", candidate_skill_id: "5" },
+      { id: "6", name: "PostgreSQL", type: "hard", candidate_skill_id: "6" }
+    ],
     location: "San Francisco, CA",
     rate_type: "annual",
     birth_date: "1988-05-22",
@@ -100,7 +109,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Frontend Developer",
     photo: "/images/avatar/av-3.svg",
     resume: "resume.pdf",
-    skills: ["Angular", "JavaScript", "CSS"],
+    skills: [
+      { id: "7", name: "Angular", type: "hard", candidate_skill_id: "7" },
+      { id: "8", name: "JavaScript", type: "hard", candidate_skill_id: "8" },
+      { id: "9", name: "CSS", type: "hard", candidate_skill_id: "9" }
+    ],
     location: "Austin, TX",
     rate_type: "annual",
     birth_date: "1992-08-10",
@@ -126,7 +139,12 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Lead Developer",
     photo: "/images/avatar/av-4.svg",
     resume: "resume.pdf",
-    skills: ["React", "TypeScript", "AWS", "Docker"],
+    skills: [
+      { id: "10", name: "React", type: "hard", candidate_skill_id: "10" },
+      { id: "11", name: "TypeScript", type: "hard", candidate_skill_id: "11" },
+      { id: "12", name: "AWS", type: "hard", candidate_skill_id: "12" },
+      { id: "13", name: "Docker", type: "hard", candidate_skill_id: "13" }
+    ],
     location: "Seattle, WA",
     rate_type: "annual",
     birth_date: "1985-03-12",
@@ -152,7 +170,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Junior Developer",
     photo: "/images/avatar/av-5.svg",
     resume: "resume.pdf",
-    skills: ["JavaScript", "HTML", "CSS"],
+    skills: [
+      { id: "14", name: "JavaScript", type: "hard", candidate_skill_id: "14" },
+      { id: "15", name: "HTML", type: "hard", candidate_skill_id: "15" },
+      { id: "16", name: "CSS", type: "hard", candidate_skill_id: "16" }
+    ],
     location: "Chicago, IL",
     rate_type: "annual",
     birth_date: "1995-07-08",
@@ -173,10 +195,13 @@ const mockCandidates: RequisitionPositionCandidate[] = [
 ];
 
 const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
-  // Use mock data for now
-  const candidates = mockCandidates;
-  const isLoading = false;
-  const error = null;
+  // Use real data from API
+  const { data, isLoading, error } = useRequisitionCandidates(requisitionId, {
+    page: 1,
+    page_size: 50, // Show more candidates in the table
+  });
+  
+  const candidates = data?.items || [];
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -208,15 +233,15 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
             <Avatar className="w-10 h-10">
               <AvatarImage src={candidate.photo} />
               <AvatarFallback>
-                {candidate.name.charAt(0)}{candidate.last_name.charAt(0)}
+                {candidate.name?.charAt(0) || '?'}{candidate.last_name?.charAt(0) || '?'}
               </AvatarFallback>
             </Avatar>
             <div>
               <div className="font-medium text-sm">
-                {candidate.name} {candidate.last_name}
+                {candidate.name} {candidate.last_name || ''}
               </div>
               <div className="text-xs text-default-500">
-                {candidate.role} • {candidate.location}
+                {candidate.role || 'N/A'} • {candidate.location || 'N/A'}
               </div>
             </div>
           </div>
@@ -267,18 +292,21 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
       accessorKey: "skills",
       header: "Skills",
       cell: ({ row }) => {
-        const skills = row.getValue("skills") as string[];
+        const skills = (row.getValue("skills") as CandidateSkill[]) || [];
         return (
           <div className="flex flex-wrap gap-1">
             {skills.slice(0, 2).map((skill, index) => (
-              <Badge key={index} color="secondary" className="text-xs">
-                {skill}
+              <Badge key={skill.id || index} color="secondary" className="text-xs">
+                {skill.name}
               </Badge>
             ))}
             {skills.length > 2 && (
               <Badge color="secondary" className="text-xs">
                 +{skills.length - 2}
               </Badge>
+            )}
+            {skills.length === 0 && (
+              <span className="text-xs text-default-400">No skills</span>
             )}
           </div>
         );
@@ -366,7 +394,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
         </CardHeader>
         <CardContent className="p-6 text-center">
           <div className="text-destructive">
-            Error loading candidates: {error}
+            Error loading candidates: {error instanceof Error ? error.message : 'Unknown error'}
           </div>
         </CardContent>
       </Card>
@@ -376,7 +404,14 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Associated Candidates</CardTitle>
+        <CardTitle className="flex items-center justify-between">
+          <span>Associated Candidates</span>
+          {data && (
+            <Badge color="secondary" className="text-xs">
+              {data.itemsTotal} candidate{data.itemsTotal !== 1 ? 's' : ''}
+            </Badge>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <Table>

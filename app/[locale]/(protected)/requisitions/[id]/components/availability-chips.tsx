@@ -6,57 +6,89 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { useState } from "react";
 import { Plus, X, Clock, MapPin, Users } from "lucide-react";
+import { AvailabilityOption } from "../../types/requisitions.types";
 
-interface AvailabilityOption {
-  id: string;
-  type: 'location' | 'schedule' | 'team_size';
-  label: string;
-  value: string;
-  color: string;
+interface AvailabilityChipsProps {
+  availabilities?: AvailabilityOption[];
+  onUpdateAvailabilities?: (availabilities: AvailabilityOption[]) => void;
+  isEditable?: boolean;
+  isUpdating?: boolean;
 }
 
-const AvailabilityChips = () => {
-  const [availabilityOptions, setAvailabilityOptions] = useState<AvailabilityOption[]>([
-    {
-      id: '1',
-      type: 'location',
-      label: 'Remote',
-      value: 'remote',
-      color: 'bg-blue-100 text-blue-800 border-blue-200'
-    },
-    {
-      id: '2',
-      type: 'location',
-      label: 'Hybrid',
-      value: 'hybrid',
-      color: 'bg-green-100 text-green-800 border-green-200'
-    },
-    {
-      id: '3',
-      type: 'schedule',
-      label: 'Full-time',
-      value: 'full-time',
-      color: 'bg-purple-100 text-purple-800 border-purple-200'
-    },
-    {
-      id: '4',
-      type: 'schedule',
-      label: 'Flexible Hours',
-      value: 'flexible',
-      color: 'bg-orange-100 text-orange-800 border-orange-200'
-    },
-    {
-      id: '5',
-      type: 'team_size',
-      label: 'Small Team',
-      value: 'small',
-      color: 'bg-pink-100 text-pink-800 border-pink-200'
-    }
-  ]);
+const AvailabilityChips = ({
+  availabilities = [],
+  onUpdateAvailabilities,
+  isEditable = true,
+  isUpdating = false
+}: AvailabilityChipsProps) => {
+  // const [availabilityOptions, setAvailabilityOptions] = useState<AvailabilityOption[]>([
+  //   {
+  //     id: '1',
+  //     type: 'location',
+  //     label: 'Remote',
+  //     value: 'remote',
+  //     color: 'bg-blue-100 text-blue-800 border-blue-200'
+  //   },
+  //   {
+  //     id: '2',
+  //     type: 'location',
+  //     label: 'Hybrid',
+  //     value: 'hybrid',
+  //     color: 'bg-green-100 text-green-800 border-green-200'
+  //   },
+  //   {
+  //     id: '3',
+  //     type: 'schedule',
+  //     label: 'Full-time',
+  //     value: 'full-time',
+  //     color: 'bg-purple-100 text-purple-800 border-purple-200'
+  //   },
+  //   {
+  //     id: '4',
+  //     type: 'schedule',
+  //     label: 'Flexible Hours',
+  //     value: 'flexible',
+  //     color: 'bg-orange-100 text-orange-800 border-orange-200'
+  //   },
+  //   {
+  //     id: '5',
+  //     type: 'team_size',
+  //     label: 'Small Team',
+  //     value: 'small',
+  //     color: 'bg-pink-100 text-pink-800 border-pink-200'
+  //   }
+  // ]);
+  const availabilityOptions = availabilities;
 
   const [isAddingOption, setIsAddingOption] = useState(false);
   const [newOptionLabel, setNewOptionLabel] = useState("");
   const [newOptionType, setNewOptionType] = useState<'location' | 'schedule' | 'team_size'>('location');
+
+  // Opciones predefinidas basadas en los valores del backend con full_name
+  const predefinedOptions = {
+    location: [
+      { value: 'on-site', label: 'On Site' },
+      { value: 'hybrid', label: 'Hybrid' },
+      { value: 'remote', label: 'Remote' }
+    ],
+    schedule: [
+      { value: 'full', label: 'Full / Complete' },
+      { value: 'rg', label: 'Regular Hours' },
+      { value: 'regular', label: 'Regular' },
+      { value: 'regular/full', label: 'Regular/Full' },
+      { value: 'full-business days', label: 'Full-Business Days' },
+      { value: 'full - bd', label: 'Business Days' },
+      { value: 'after hours', label: 'After Hours' },
+      { value: 'rgwk', label: 'Weekends' },
+      { value: 'regular weekend', label: 'Regular Weekend' },
+      { value: 'any', label: 'Any' }
+    ],
+    team_size: [
+      { value: 'small', label: 'Small Team' },
+      { value: 'medium', label: 'Medium Team' },
+      { value: 'large', label: 'Large Team' }
+    ]
+  };
 
   const getTypeIcon = (type: 'location' | 'schedule' | 'team_size') => {
     switch (type) {
@@ -93,14 +125,26 @@ const AvailabilityChips = () => {
         value: newOptionLabel.trim().toLowerCase().replace(/\s+/g, '-'),
         color: getTypeColor(newOptionType)
       };
-      setAvailabilityOptions([...availabilityOptions, newOption]);
+      onUpdateAvailabilities?.([...availabilityOptions, newOption]);
       setNewOptionLabel("");
       setIsAddingOption(false);
     }
   };
 
+  const handleSelectPredefinedOption = (option: { value: string; label: string }) => {
+    const newOption: AvailabilityOption = {
+      id: `temp-${Date.now()}`,
+      type: newOptionType,
+      label: option.label,
+      value: option.value,
+      color: getTypeColor(newOptionType)
+    };
+    onUpdateAvailabilities?.([...availabilityOptions, newOption]);
+    setIsAddingOption(false);
+  };
+
   const handleRemoveOption = (id: string) => {
-    setAvailabilityOptions(availabilityOptions.filter(option => option.id !== id));
+    onUpdateAvailabilities?.(availabilityOptions.filter(option => option.id !== id));
   };
 
   const groupedOptions = availabilityOptions.reduce((acc, option) => {
@@ -129,34 +173,25 @@ const AvailabilityChips = () => {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Availability</span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsAddingOption(true)}
-            className="text-xs"
-          >
-            <Plus className="w-3 h-3 mr-1" />
-            Add Option
-          </Button>
+          {isEditable && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAddingOption(true)}
+              className="text-xs"
+              disabled={isUpdating}
+            >
+              <Plus className="w-3 h-3 mr-1" />
+              Add Option
+            </Button>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Add New Option Form */}
-        {isAddingOption && (
+        {isAddingOption && isEditable && (
           <div className="bg-default-50 rounded-lg p-4 border border-dashed border-default-300">
             <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium text-default-700 mb-1 block">
-                  Option Label
-                </label>
-                <input
-                  type="text"
-                  value={newOptionLabel}
-                  onChange={(e) => setNewOptionLabel(e.target.value)}
-                  placeholder="e.g., On-site, Part-time, Large Team..."
-                  className="w-full px-3 py-2 text-sm border border-default-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              </div>
               <div>
                 <label className="text-xs font-medium text-default-700 mb-1 block">
                   Category
@@ -171,15 +206,50 @@ const AvailabilityChips = () => {
                   <option value="team_size">Team Size</option>
                 </select>
               </div>
+              
+              <div>
+                <label className="text-xs font-medium text-default-700 mb-2 block">
+                  Select Option
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {predefinedOptions[newOptionType].map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => handleSelectPredefinedOption(option)}
+                      className="px-3 py-2 text-xs text-left border border-default-300 rounded-md hover:bg-default-100 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t pt-3">
+                <div>
+                  <label className="text-xs font-medium text-default-700 mb-1 block">
+                    Or add custom option
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newOptionLabel}
+                      onChange={(e) => setNewOptionLabel(e.target.value)}
+                      placeholder="e.g., Custom option..."
+                      className="flex-1 px-3 py-2 text-sm border border-default-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                    <Button
+                      size="sm"
+                      onClick={handleAddOption}
+                      disabled={!newOptionLabel.trim()}
+                      className="text-xs"
+                    >
+                      Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  onClick={handleAddOption}
-                  disabled={!newOptionLabel.trim()}
-                  className="text-xs"
-                >
-                  Add Option
-                </Button>
                 <Button
                   variant="outline"
                   size="sm"
@@ -215,12 +285,15 @@ const AvailabilityChips = () => {
                     >
                       {getTypeIcon(option.type)}
                       {option.label}
-                      <button
-                        onClick={() => handleRemoveOption(option.id)}
-                        className="ml-1 hover:bg-black/10 rounded-full p-0.5"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
+                      {isEditable && (
+                        <button
+                          onClick={() => handleRemoveOption(option.id)}
+                          className="ml-1 hover:bg-black/10 rounded-full p-0.5"
+                          disabled={isUpdating}
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
                     </Badge>
                   ))}
                 </div>

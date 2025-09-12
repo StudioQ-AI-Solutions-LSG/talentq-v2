@@ -8,12 +8,14 @@ import CandidatesTable from "./components/candidates-table";
 import JobDescriptionCard from "./components/job-description-card";
 import SkillsListCard from "./components/skills-list-card";
 import AvailabilityChips from "./components/availability-chips";
-import { Requisition } from "../types/requisitions.types";
+import { Requisition, AvailabilityOption } from "../types/requisitions.types";
+import { useRequisition } from "../hooks/useRequisitions";
+import { useCandidatesStore } from "@/store/candidate.store";
 
 // Mock data for development
 const mockRequisition: Requisition = {
   id: "mock-requisition-1",
-  rate: 85000,
+  rate: "85000",
   skills: [
     {
       id: "skill-1",
@@ -23,7 +25,7 @@ const mockRequisition: Requisition = {
       is_mandatory: false,
     },
     {
-      id: "skill-2", 
+      id: "skill-2",
       name: "TypeScript",
       type: "hard",
       requisition_position_skill_id: "req-skill-2",
@@ -32,7 +34,7 @@ const mockRequisition: Requisition = {
     {
       id: "skill-3",
       name: "Node.js",
-      type: "hard", 
+      type: "hard",
       requisition_position_skill_id: "req-skill-3",
       is_mandatory: false,
     },
@@ -68,9 +70,29 @@ const mockRequisition: Requisition = {
 };
 
 const RequisitionDetailsPage = ({ params: { id } }: { params: { id: string } }) => {
-  // Use mock data for now
-  const requisition = mockRequisition;
+  const {
+    selected_customer: selectedCustomer,
+    selected_division: selectedDivision,
+  } = useCandidatesStore();
+  const { requisition, isLoading, error, updateRequisition, isUpdating } = useRequisition(id, selectedCustomer, selectedDivision);
 
+  // Función para manejar actualizaciones de availabilities
+  const handleUpdateAvailabilities = (newAvailabilities: AvailabilityOption[]) => {
+    if (requisition) {
+      updateRequisition({
+        id: requisition.id,
+        availabilities: newAvailabilities
+      });
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error || !requisition) {
+    return <div>Error loading requisition</div>;
+  }
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -91,7 +113,12 @@ const RequisitionDetailsPage = ({ params: { id } }: { params: { id: string } }) 
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <RequisitionInfoCard requisition={requisition} />
           <SkillsListCard skills={requisition.skills} />
-          <AvailabilityChips />
+          <AvailabilityChips 
+            availabilities={requisition.availabilities}
+            onUpdateAvailabilities={handleUpdateAvailabilities}
+            isEditable={true}
+            isUpdating={isUpdating}
+          />
         </div>
 
         {/* Right Column - Job Description and Candidates */}

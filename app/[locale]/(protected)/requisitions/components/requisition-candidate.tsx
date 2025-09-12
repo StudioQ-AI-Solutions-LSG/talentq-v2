@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRequisitionCandidates } from "../hooks/useRequisitionsPositionsCandidates";
-import { RequisitionPositionCandidate } from "../services/requisitions-positions-candidates";
+import { RequisitionPositionCandidate, CandidateSkill } from "../services/requisitions-positions-candidates";
 interface RequisitionCandidatesProps {
     positionId: string;
     maxVisible?: number; // Máximo de avatares a mostrar

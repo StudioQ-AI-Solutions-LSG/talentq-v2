@@ -1,5 +1,12 @@
 import { httpV2 } from "@/lib/api/axios";
 
+export interface CandidateSkill {
+    id: string;
+    name: string;
+    type: string;
+    candidate_skill_id: string;
+}
+
 export interface RequisitionPositionCandidate {
     id: string;
     name: string;
@@ -7,7 +14,7 @@ export interface RequisitionPositionCandidate {
     role: string;
     photo: string;
     resume: string;
-    skills: string[];
+    skills: CandidateSkill[];
     location: string;
     last_name: string;
     rate_type: 'annual' | 'monthly';
