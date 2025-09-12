@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
-
-interface DataTablePaginationProps {
-    table: Table<any>;
-}
 
 export interface PaginationButtonProps {
     currentPage: number;
@@ -21,9 +16,6 @@ export interface PaginationButtonProps {
 }
 
 const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
-
-    console.log('🔍 TablePagination - table object:', table);
-    console.log('🔍 TablePagination - setPageIndex function:', table.setPageIndex);
 
     const currentPage = table.currentPage;
     const totalPages = table.totalPages;
@@ -50,7 +42,6 @@ const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
                     variant="outline"
                     size="icon"
                     onClick={() => {
-                        console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
                         table.previousPage();
                     }}
                     disabled={!table.getCanPreviousPage()}
@@ -67,8 +58,6 @@ const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
                             {showEllipsis && <span className="px-1">…</span>}
                             <Button
                                 onClick={() => {
-                                    console.log('🖱️ Button clicked - page:', page);
-                                    console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
                                     table.setPageIndex(page);
                                 }}
                                 size="icon"
@@ -87,7 +76,7 @@ const TablePagination = ({ table }: { table: PaginationButtonProps }) => {
                     size="icon"
                     // onClick={() => table.nextPage()}
                     onClick={() => {
-                        console.log('🖱️ Button clicked - table.setPageIndex:', table.setPageIndex);
+
                         table.nextPage();
                     }}
                     disabled={!table.getCanNextPage()}

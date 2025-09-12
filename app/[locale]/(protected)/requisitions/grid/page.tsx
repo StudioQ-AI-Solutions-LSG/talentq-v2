@@ -239,7 +239,7 @@ const RequisionGrid = () => {
       </div>
       {data && data.total_pages > 1 && (
         <>
-          <div className="w-full flex justify-center mt-6">
+          <div className="w-full flex justify-end mt-6">
             <Pagination table={table} />
           </div>
         </>
