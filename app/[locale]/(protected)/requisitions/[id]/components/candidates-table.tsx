@@ -9,7 +9,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -195,13 +194,19 @@ const mockCandidates: RequisitionPositionCandidate[] = [
 ];
 
 const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
-  // Use real data from API
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [pageSize] = React.useState(8); // Match the hook's default page size
+  
+  // Use real data from API with pagination
   const { data, isLoading, error } = useRequisitionCandidates(requisitionId, {
-    page: 1,
-    page_size: 50, // Show more candidates in the table
+    page: currentPage,
+    page_size: pageSize,
   });
   
   const candidates = data?.items || [];
+  const totalItems = data?.itemsTotal || 0;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -359,7 +364,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // Remove client-side pagination since we're using server-side pagination
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -368,6 +373,9 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
       columnVisibility,
       rowSelection,
     },
+    // Disable client-side pagination
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
   });
 
   if (isLoading) {
@@ -408,7 +416,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
           <span>Associated Candidates</span>
           {data && (
             <Badge color="secondary" className="text-xs">
-              {data.itemsTotal} candidate{data.itemsTotal !== 1 ? 's' : ''}
+              {totalItems} candidate{totalItems !== 1 ? 's' : ''}
             </Badge>
           )}
         </CardTitle>
@@ -464,26 +472,25 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
           </TableBody>
         </Table>
         
-        {/* Pagination */}
-        <div className="flex items-center justify-end space-x-2 py-4 px-4">
+        {/* Server-side Pagination */}
+        <div className="flex items-center justify-between py-4 px-4">
           <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems} candidates
           </div>
-          <div className="space-x-2">
+          <div className="flex items-center space-x-2">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage <= 1}
             >
               Previous
             </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage >= totalPages}
             >
               Next
             </Button>

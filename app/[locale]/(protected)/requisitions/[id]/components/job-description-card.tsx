@@ -98,7 +98,7 @@ What We Offer:
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-
+  const containsHTML = (text: string) => /<[^>]*>/g.test(text);
   return (
     <Card>
       <CardHeader>
@@ -162,9 +162,18 @@ What We Offer:
             </div>
 
             <div className="prose prose-sm max-w-none">
-              <pre className="whitespace-pre-wrap text-sm text-default-700 leading-relaxed font-sans">
-                {jobDescription || mockJobDescription}
-              </pre>
+              {containsHTML(jobDescription || mockJobDescription) ? (
+                <div
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: jobDescription || mockJobDescription
+                  }}
+                />
+              ) : (
+                <pre className="whitespace-pre-wrap text-sm text-default-700 leading-relaxed font-sans">
+                  {jobDescription || mockJobDescription}
+                </pre>
+              )}
             </div>
           </div>
 
