@@ -196,17 +196,17 @@ const mockCandidates: RequisitionPositionCandidate[] = [
 const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageSize] = React.useState(8); // Match the hook's default page size
-  
+
   // Use real data from API with pagination
   const { data, isLoading, error } = useRequisitionCandidates(requisitionId, {
     page: currentPage,
     page_size: pageSize,
   });
-  
+
   const candidates = data?.items || [];
   const totalItems = data?.itemsTotal || 0;
   const totalPages = Math.ceil(totalItems / pageSize);
-  
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -215,15 +215,17 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "new":
-        return "bg-info/20 text-info border-info/30";
+      case "in_progress":
+        return "bg-success/20 text-success";
       case "interview":
-        return "bg-warning/20 text-warning border-warning/30";
+        return "bg-blue-100 text-blue-600";
+      case "accepted":
       case "approved":
-        return "bg-success/20 text-success border-success/30";
+        return "bg-green-100 text-green-600";
       case "rejected":
-        return "bg-destructive/20 text-destructive border-destructive/30";
+        return "bg-red-100 text-red-600";
       default:
-        return "bg-gray-500/20 text-gray-500 border-gray-500/30";
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -432,9 +434,9 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -471,7 +473,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
             )}
           </TableBody>
         </Table>
-        
+
         {/* Server-side Pagination */}
         <div className="flex items-center justify-between py-4 px-4">
           <div className="flex-1 text-sm text-muted-foreground">

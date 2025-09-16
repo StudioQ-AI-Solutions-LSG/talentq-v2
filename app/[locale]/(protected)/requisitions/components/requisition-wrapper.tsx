@@ -122,6 +122,9 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     setCurrentPage(urlPage);
   }, [searchParams]);
 
+  const isDetailsPage =
+    pathname.includes("/[id]") || pathname.match(/\/[a-f0-9-]{36}$/);
+
   return (
     <div>
       <CreateRequisition open={open} setOpen={setOpen} />
@@ -131,7 +134,7 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
           <h4 className="font-medium lg:text-2xl text-xl capitalize text-default-900">
             Requisitions
           </h4>
-          
+
           {/* Nav Buttons and Actions */}
           <div className="flex items-center gap-4">
             {menus?.map(({ label, href, active }, index) => (

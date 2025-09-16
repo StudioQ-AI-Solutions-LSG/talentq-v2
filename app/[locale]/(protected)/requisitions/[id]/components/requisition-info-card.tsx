@@ -148,7 +148,7 @@ const RequisitionInfoCard = ({ requisition }: RequisitionInfoCardProps) => {
           </div>
         </div>
 
-        {/* Confirmation Status */}
+        {/* Confirmation Status Removed, commented just in case we need to use it in the future.*/} 
         <div className="border-t pt-4">
           <h4 className="text-sm font-semibold text-default-700 mb-3">
             Confirmation Status
