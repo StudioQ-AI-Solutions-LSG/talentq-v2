@@ -127,9 +127,7 @@ export const defaultRequisitions = [
 ];
 
 export const getRequisitions = async (filters?: RequisitionFilters, page: number = 1, limit: number = 8) => {
-  console.log('Data service - Llamando con:', { filters, page, limit });
   const result = await requisitionsService.getRequisitions(filters, page, limit);
-  console.log('Data service - Resultado:', result);
   return result;
 }
 

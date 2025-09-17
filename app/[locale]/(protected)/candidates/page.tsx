@@ -78,18 +78,18 @@ const CandidateSection = () => {
   return (
     <div className="w-full">
       <SiteBreadcrumb />
-      <div className="py-2">
-        <div className="text-2xl font-medium text-default-900 mb-4">
+      <div className="flex w-full flex-wrap items-center gap-4 mb-6">
+        <h4 className="flex-1 font-medium lg:text-2xl text-xl capitalize text-default-900">
           Candidates
-        </div>
-
-        <div className="flex items-center gap-3 w-full mt-7">
+        </h4>
+      </div>
+        <div className="flex items-center gap-3 w-full">
           <div className="relative">
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
               <FiSearch className="h-5 w-5" />
             </span>
             <Input
-              placeholder="Search by Name, Position, Location..."
+              placeholder="Search by Name and Position..."
               value={search}
               onChange={handleSearchBar}
               className="w-[350px] h-[40px] text-xs text-gray-900 placeholder:text-gray-400 pl-10 pr-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:text-white"
@@ -121,7 +121,6 @@ const CandidateSection = () => {
             Clear
           </button>
         </div>
-      </div>
       {candidates?.length > 0 ? (
         <CandidateList candidates={candidates} />
       ) : (

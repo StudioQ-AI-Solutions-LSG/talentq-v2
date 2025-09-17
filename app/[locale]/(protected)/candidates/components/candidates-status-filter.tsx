@@ -12,7 +12,7 @@ import { ChevronDown } from "lucide-react";
 type StatusFilter = {
   id: string;
   label: string;
-  value: string
+  value: string;
 };
 
 type CandidatesStatusFilterProps = {
@@ -55,13 +55,9 @@ export const CandidatesStatusFilter = ({
         <DropdownMenuTrigger asChild>
           <button
             className={`w-[200px] h-[40px] pl-3 pr-4 py-2 border rounded-lg shadow-sm 
-              flex items-center justify-between text-left transition-colors 
-              overflow-hidden focus:outline-none text-sm
-              ${
-                open
-                  ? "border-transparent ring-2 ring-primary"
-                  : "border-gray-300"
-              }`}
+    flex items-center justify-between text-left transition-colors 
+    overflow-hidden focus:outline-none text-sm bg-white
+    ${open ? "border-transparent ring-2 ring-primary" : "border-gray-300"}`}
           >
             <div className="flex flex-wrap gap-1 items-center max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap">
               {selectedStatusObjects.length > 0 ? (

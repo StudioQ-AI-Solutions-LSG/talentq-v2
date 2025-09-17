@@ -10,9 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { defaultRequisitions } from "../../services/data";
 import { Link } from "@/i18n/routing";
-const ProjectAction = () => {
+
+interface RequisitionActionProps {
+  requisitionId: string;
+}
+
+const RequisitionAction = ({ requisitionId }: RequisitionActionProps) => {
   const [editTaskOpen, setEditTaskOpen] = useState<boolean>(false);
   const [deleteProject, setDeleteProject] = useState<boolean>(false);
   return (
@@ -35,7 +39,7 @@ const ProjectAction = () => {
         <DropdownMenuContent className="p-0 overflow-hidden" align="end">
           <DropdownMenuItem className="py-2 border-b border-default-200 text-default-600 focus:bg-default focus:text-default-foreground rounded-none cursor-pointer">
             <Link
-              href={`/requisitions/${defaultRequisitions[0].id}`}
+              href={`/requisitions/${requisitionId}`}
               className=" flex  items-center w-full"
             >
               <Eye className="w-3.5 h-3.5 me-1" />
@@ -62,4 +66,4 @@ const ProjectAction = () => {
   );
 };
 
-export default ProjectAction;
+export default RequisitionAction;
