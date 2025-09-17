@@ -16,6 +16,7 @@ import { useRequisitionsFilter } from "./hooks/use-requisitions-filter";
 import { CandidatesStatusFilter } from "./components/candidates-status-filter";
 import { statusCandidates } from "@/lib/constants/candidates.constants";
 import CandidateList from "./components/candidates-list";
+import SiteBreadcrumb from "@/components/site-breadcrumb";
 
 const CandidateSection = () => {
   const [selectedRequisitionId, setSelectedRequisitionId] = React.useState<
@@ -76,7 +77,8 @@ const CandidateSection = () => {
 
   return (
     <div className="w-full">
-      <div className="py-4">
+      <SiteBreadcrumb />
+      <div className="py-2">
         <div className="text-2xl font-medium text-default-900 mb-4">
           Candidates
         </div>

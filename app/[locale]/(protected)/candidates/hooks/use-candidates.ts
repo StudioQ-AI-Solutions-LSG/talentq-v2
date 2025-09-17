@@ -20,7 +20,7 @@ export const useCandidates = () => {
     selected_division: selectedDivision || "",
     selected_customer,
     requisition_position_id,
-    status, // Change before sending the PR
+    status,
     search_criteria,
     page,
     page_size,

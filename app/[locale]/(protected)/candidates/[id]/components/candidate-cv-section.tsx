@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,11 +11,11 @@ interface CandidateCVSectionProps {
   uploadedDate?: string;
 }
 
-const CandidateCVSection = ({ 
+const CandidateCVSection = ({
   cvUrl = "/documents/candidate-cv.pdf",
   fileName = "John_Doe_Resume.pdf",
   fileSize = "2.4 MB",
-  uploadedDate = "2024-01-15"
+  uploadedDate = "2024-01-15",
 }: CandidateCVSectionProps) => {
   return (
     <Card>
@@ -29,10 +29,13 @@ const CandidateCVSection = ({
         <div className="flex items-center gap-4 p-4 bg-default-50 rounded-lg border">
           <div className="flex-shrink-0">
             <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Icon icon="heroicons:document-text" className="text-2xl text-primary" />
+              <Icon
+                icon="heroicons:document-text"
+                className="text-2xl text-primary"
+              />
             </div>
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <h4 className="text-sm font-medium text-default-900 truncate">
               {fileName}
@@ -48,23 +51,23 @@ const CandidateCVSection = ({
               </span>
             </div>
           </div>
-          
+
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" color="primary">
+            {/* <Button size="sm" variant="outline" color="primary">
               <Icon icon="heroicons:eye" className="mr-2" />
               View
-            </Button>
-            <Button size="sm" variant="ghost">
-              <Icon icon="heroicons:arrow-down-tray" className="mr-2" />
-              Download
-            </Button>
+            </Button> */}
+            <a href={cvUrl} download>
+              <Button size="sm" variant="ghost">
+                <Icon icon="heroicons:arrow-down-tray" className="mr-2" />
+                Download
+              </Button>
+            </a>
           </div>
         </div>
-      
       </CardContent>
     </Card>
   );
 };
 
 export default CandidateCVSection;
-

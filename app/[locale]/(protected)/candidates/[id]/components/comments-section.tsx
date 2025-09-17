@@ -1,85 +1,67 @@
-'use client'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+"use client";
 import { Avatar } from "@/components/ui/avatar";
-import { Icon } from "@/components/ui/icon";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Icon } from "@/components/ui/icon";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
+import { Comment } from "../../types/candidate-detail-comments-types";
 
-interface Comment {
-  id: string;
-  author: string;
-  authorRole: string;
-  authorAvatar?: string;
-  content: string;
-  timestamp: string;
-  type: "general" | "technical" | "cultural" | "recommendation";
-}
+// interface Comment {
+//   id: string;
+//   author: string;
+//   authorRole: string;
+//   authorAvatar?: string;
+//   content: string;
+//   timestamp: string;
+//   type: "general" | "technical" | "cultural" | "recommendation";
+// }
 
 interface CommentsSectionProps {
-  comments?: Comment[];
+  comments: Comment[];
   onAddComment?: (comment: string, type: string) => void;
 }
 
-const CommentsSection = ({
-  comments = [
-    {
-      id: "1",
-      author: "Sarah Johnson",
-      authorRole: "Technical Lead",
-      authorAvatar: "/images/avatar/avatar-1.jpg",
-      content: "Strong technical skills demonstrated in the coding challenge. React implementation was clean and well-structured.",
-      timestamp: "2024-01-15T10:30:00Z",
-      type: "technical"
-    },
-    {
-      id: "2",
-      author: "Mike Chen",
-      authorRole: "HR Manager",
-      authorAvatar: "/images/avatar/avatar-2.jpg",
-      content: "Excellent communication during the interview. Shows great potential for team collaboration.",
-      timestamp: "2024-01-15T14:20:00Z",
-      type: "cultural"
-    },
-    {
-      id: "3",
-      author: "Emily Rodriguez",
-      authorRole: "Senior Developer",
-      authorAvatar: "/images/avatar/avatar-3.jpg",
-      content: "I recommend moving forward with this candidate. Their portfolio shows consistent growth and quality work.",
-      timestamp: "2024-01-16T09:15:00Z",
-      type: "recommendation"
-    }
-  ],
-  onAddComment
-}: CommentsSectionProps) => {
+const CommentsSection = ({ comments, onAddComment }: CommentsSectionProps) => {
   const [newComment, setNewComment] = useState("");
-  const [commentType, setCommentType] = useState<"general" | "technical" | "cultural" | "recommendation">("general");
+  const [commentType, setCommentType] = useState<
+    "general" | "technical" | "cultural" | "recommendation"
+  >("general");
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "technical": return "primary";
-      case "cultural": return "success";
-      case "recommendation": return "warning";
-      default: return "secondary";
+      case "technical":
+        return "primary";
+      case "cultural":
+        return "success";
+      case "recommendation":
+        return "warning";
+      default:
+        return "secondary";
     }
   };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case "technical": return "heroicons:code-bracket";
-      case "cultural": return "heroicons:users";
-      case "recommendation": return "heroicons:star";
-      default: return "heroicons:chat-bubble-left-right";
+      case "technical":
+        return "heroicons:code-bracket";
+      case "cultural":
+        return "heroicons:users";
+      case "recommendation":
+        return "heroicons:star";
+      default:
+        return "heroicons:chat-bubble-left-right";
     }
   };
 
-  const formatTimestamp = (timestamp: string) => {
+  const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    );
+
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
@@ -97,7 +79,10 @@ const CommentsSection = ({
     <Card>
       <CardHeader className="border-b">
         <CardTitle className="text-xl font-normal flex items-center gap-2">
-          <Icon icon="heroicons:chat-bubble-left-right" className="text-primary" />
+          <Icon
+            icon="heroicons:chat-bubble-left-right"
+            className="text-primary"
+          />
           Comments & Notes
         </CardTitle>
       </CardHeader>
@@ -115,7 +100,7 @@ const CommentsSection = ({
               className="min-h-[100px]"
             />
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div>
               <label className="text-sm font-medium text-default-900 mb-2 block">
@@ -132,10 +117,10 @@ const CommentsSection = ({
                 <option value="recommendation">Recommendation</option>
               </select>
             </div>
-            
+
             <div className="flex-1"></div>
-            
-            <Button 
+
+            <Button
               onClick={handleSubmitComment}
               disabled={!newComment.trim()}
               color="primary"
@@ -150,46 +135,49 @@ const CommentsSection = ({
         <div className="space-y-4">
           <h3 className="text-sm font-medium text-default-900 flex items-center gap-2">
             <Icon icon="heroicons:chat-bubble-left-right" className="w-4 h-4" />
-            Previous Comments ({comments.length})
+            Previous Comments ({comments?.length})
           </h3>
-          
+
           <div className="space-y-4">
-            {comments.map((comment) => (
-              <div key={comment.id} className="flex gap-3 p-4 bg-default-50 rounded-lg">
+            {comments?.map((comment) => (
+              <div
+                key={comment.id}
+                className="flex gap-3 p-4 bg-default-50 rounded-lg"
+              >
                 <Avatar className="w-10 h-10">
-                  {comment.authorAvatar ? (
-                    <img src={comment.authorAvatar} alt={comment.author} />
-                  ) : (
-                    <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                      <Icon icon="heroicons:user" className="w-5 h-5 text-primary" />
-                    </div>
-                  )}
+                  <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+                    <Icon
+                      icon="heroicons:user"
+                      className="w-5 h-5 text-primary"
+                    />
+                  </div>
                 </Avatar>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="text-sm font-medium text-default-900">
-                      {comment.author}
+                      {comment.user_information.name ?? ""}
                     </h4>
-                    <span className="text-xs text-default-500">
-                      {comment.authorRole}
-                    </span>
-                    <Badge 
-                      color={getTypeColor(comment.type) as any}
+
+                    <Badge
+                      color={getTypeColor("general") as any}
                       className="text-xs"
                     >
-                      <Icon icon={getTypeIcon(comment.type)} className="w-3 h-3 mr-1" />
-                      {comment.type}
+                      <Icon
+                        icon={getTypeIcon("general")}
+                        className="w-3 h-3 mr-1"
+                      />
+                      {"general"}
                     </Badge>
                   </div>
-                  
+
                   <p className="text-sm text-default-600 mb-2 leading-relaxed">
-                    {comment.content}
+                    {comment.comment}
                   </p>
-                  
+
                   <div className="flex items-center gap-2 text-xs text-default-500">
                     <Icon icon="heroicons:clock" className="w-3 h-3" />
-                    {formatTimestamp(comment.timestamp)}
+                    {formatTimestamp(comment.created_at)}
                   </div>
                 </div>
               </div>
@@ -199,7 +187,9 @@ const CommentsSection = ({
 
         {/* Comment Types Legend */}
         <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-default-900 mb-3">Comment Types</h4>
+          <h4 className="text-sm font-medium text-default-900 mb-3">
+            Comment Types
+          </h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="flex items-center gap-2 text-xs">
               <Badge color="primary" className="text-xs">
@@ -221,7 +211,10 @@ const CommentsSection = ({
             </div>
             <div className="flex items-center gap-2 text-xs">
               <Badge color="secondary" className="text-xs">
-                <Icon icon="heroicons:chat-bubble-left-right" className="w-3 h-3 mr-1" />
+                <Icon
+                  icon="heroicons:chat-bubble-left-right"
+                  className="w-3 h-3 mr-1"
+                />
                 General
               </Badge>
             </div>
