@@ -9,6 +9,12 @@ import type {
     RequisitionStats
 } from "../types/requisitions.types";
 
+interface RequisitionDetailsParams {
+    id: string;
+    selected_customer?: string;
+    selected_division?: string;
+}
+
 // Helper function to convert backend response to frontend format
 const mapBackendResponseToFrontend = (backendResponse: RequisitionListResponse, page: number, pageSize: number): RequisitionListResponseLegacy => {
     const total = backendResponse.itemsTotal;
@@ -51,6 +57,9 @@ export const requisitionsService = {
                 params.append('selected_division', filters.division_id);
             }
 
+            console.log('URL request:', `/requisition/positions?${params.toString()}`);
+            console.log('Page:', page, 'Limit:', limit);
+
             // HTTP call that returns JSON
             const response = await httpV2.get<RequisitionListResponse>(`/requisition/positions?${params.toString()}`);
 
@@ -68,9 +77,16 @@ export const requisitionsService = {
      * Gets an individual requisition by ID
      * @returns Promise<Requisition> - Requisition data
      */
-    getRequisition: async (id: string): Promise<Requisition> => {
+    getRequisition: async (params: RequisitionDetailsParams): Promise<Requisition> => {
+        const { id, selected_customer, selected_division } = params;
+        console.log('getRequisition - ID:', id);
+        let url = `/requisition/position/${id}`;
+        const queryParams = new URLSearchParams();
+        if (selected_customer) queryParams.append('selected_customer', selected_customer);
+        if (selected_division) queryParams.append('selected_division', selected_division);
+        if (queryParams.toString()) url += `?${queryParams.toString()}`;
         try {
-            const response = await http.get<Requisition>(`/requisition/positions/${id}`);
+            const response = await httpV2.get<Requisition>(url);
             return response;
         } catch (error) {
             console.error('Error fetching requisition:', error);
@@ -84,7 +100,7 @@ export const requisitionsService = {
      */
     createRequisition: async (data: CreateRequisitionRequest): Promise<Requisition> => {
         try {
-            const response = await http.post<Requisition>('/requisition/positions', data);
+            const response = await httpV2.post<Requisition>('/requisition/positions', data);
             return response;
         } catch (error) {
             console.error('Error creating requisition:', error);

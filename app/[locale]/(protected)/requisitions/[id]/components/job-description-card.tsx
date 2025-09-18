@@ -17,7 +17,7 @@ const JobDescriptionCard = ({ requisition }: JobDescriptionCardProps) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   // Mock job description - replace with actual data from requisition
-  const mockJobDescription = `
+  const mockJobDescription = requisition.job_description ? requisition.job_description : `
 We are seeking a talented ${requisition.position_seniority} ${requisition.position_name} to join our dynamic team. 
 
 ## Key Responsibilities:
@@ -98,7 +98,7 @@ What We Offer:
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-
+  const containsHTML = (text: string) => /<[^>]*>/g.test(text);
   return (
     <Card>
       <CardHeader>
@@ -160,11 +160,20 @@ What We Offer:
                 Current Job Description
               </span>
             </div>
-            
+
             <div className="prose prose-sm max-w-none">
-              <pre className="whitespace-pre-wrap text-sm text-default-700 leading-relaxed font-sans">
-                {jobDescription || mockJobDescription}
-              </pre>
+              {containsHTML(jobDescription || mockJobDescription) ? (
+                <div
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: jobDescription || mockJobDescription
+                  }}
+                />
+              ) : (
+                <pre className="whitespace-pre-wrap text-sm text-default-700 leading-relaxed font-sans">
+                  {jobDescription || mockJobDescription}
+                </pre>
+              )}
             </div>
           </div>
 

@@ -162,7 +162,7 @@ export const useRequisitions = (
 
 // Individual hook return type
 interface UseRequisitionReturn {
-    requisition: any; // TODO: Type when Requisition is defined
+    requisition: Requisition | undefined;
     isLoading: boolean;
     error: Error | null;
     updateRequisition: (data: UpdateRequisitionRequest) => void;
@@ -173,9 +173,15 @@ interface UseRequisitionReturn {
 /**
  * Hook for managing an individual requisition
  * @param id - Requisition ID
+ * @param selectedCustomer - Selected customer
+ * @param selectedDivision - Selected division
  * @returns Object with data, loading states, errors and actions for a requisition
  */
-export const useRequisition = (id: string): UseRequisitionReturn => {
+export const useRequisition = (
+    id: string,
+    selectedCustomer?: string,
+    selectedDivision?: string
+): UseRequisitionReturn => {
     const queryClient = useQueryClient();
 
     const {
@@ -183,8 +189,12 @@ export const useRequisition = (id: string): UseRequisitionReturn => {
         isLoading,
         error
     } = useQuery({
-        queryKey: ['requisition', id],
-        queryFn: () => requisitionsService.getRequisition(id),
+        queryKey: ['requisition', id, selectedCustomer, selectedDivision],
+        queryFn: () => requisitionsService.getRequisition({
+            id,
+            selected_customer: selectedCustomer,
+            selected_division: selectedDivision
+        }),
         enabled: !!id,
         staleTime: 5 * 60 * 1000 // 5 minutes
     });

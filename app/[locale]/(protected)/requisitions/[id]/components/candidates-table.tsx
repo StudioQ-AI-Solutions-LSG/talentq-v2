@@ -9,7 +9,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -32,7 +31,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Eye, MessageSquare, FileText, Download } from "lucide-react";
-import { RequisitionPositionCandidate } from "../../services/requisitions-positions-candidates";
+import { RequisitionPositionCandidate, CandidateSkill } from "../../services/requisitions-positions-candidates";
+import { useRequisitionCandidatesDetails } from "../hooks/use-requisition-candidates-details";
 
 interface CandidatesTableProps {
   requisitionId: string;
@@ -48,7 +48,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Senior Developer",
     photo: "/images/avatar/av-1.svg",
     resume: "resume.pdf",
-    skills: ["React", "TypeScript", "Node.js"],
+    skills: [
+      { id: "1", name: "React", type: "hard", candidate_skill_id: "1" },
+      { id: "2", name: "TypeScript", type: "hard", candidate_skill_id: "2" },
+      { id: "3", name: "Node.js", type: "hard", candidate_skill_id: "3" }
+    ],
     location: "New York, NY",
     rate_type: "annual",
     birth_date: "1990-01-15",
@@ -74,7 +78,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Full Stack Developer",
     photo: "/images/avatar/av-2.svg",
     resume: "resume.pdf",
-    skills: ["Vue.js", "Python", "PostgreSQL"],
+    skills: [
+      { id: "4", name: "Vue.js", type: "hard", candidate_skill_id: "4" },
+      { id: "5", name: "Python", type: "hard", candidate_skill_id: "5" },
+      { id: "6", name: "PostgreSQL", type: "hard", candidate_skill_id: "6" }
+    ],
     location: "San Francisco, CA",
     rate_type: "annual",
     birth_date: "1988-05-22",
@@ -100,7 +108,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Frontend Developer",
     photo: "/images/avatar/av-3.svg",
     resume: "resume.pdf",
-    skills: ["Angular", "JavaScript", "CSS"],
+    skills: [
+      { id: "7", name: "Angular", type: "hard", candidate_skill_id: "7" },
+      { id: "8", name: "JavaScript", type: "hard", candidate_skill_id: "8" },
+      { id: "9", name: "CSS", type: "hard", candidate_skill_id: "9" }
+    ],
     location: "Austin, TX",
     rate_type: "annual",
     birth_date: "1992-08-10",
@@ -126,7 +138,12 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Lead Developer",
     photo: "/images/avatar/av-4.svg",
     resume: "resume.pdf",
-    skills: ["React", "TypeScript", "AWS", "Docker"],
+    skills: [
+      { id: "10", name: "React", type: "hard", candidate_skill_id: "10" },
+      { id: "11", name: "TypeScript", type: "hard", candidate_skill_id: "11" },
+      { id: "12", name: "AWS", type: "hard", candidate_skill_id: "12" },
+      { id: "13", name: "Docker", type: "hard", candidate_skill_id: "13" }
+    ],
     location: "Seattle, WA",
     rate_type: "annual",
     birth_date: "1985-03-12",
@@ -152,7 +169,11 @@ const mockCandidates: RequisitionPositionCandidate[] = [
     role: "Junior Developer",
     photo: "/images/avatar/av-5.svg",
     resume: "resume.pdf",
-    skills: ["JavaScript", "HTML", "CSS"],
+    skills: [
+      { id: "14", name: "JavaScript", type: "hard", candidate_skill_id: "14" },
+      { id: "15", name: "HTML", type: "hard", candidate_skill_id: "15" },
+      { id: "16", name: "CSS", type: "hard", candidate_skill_id: "16" }
+    ],
     location: "Chicago, IL",
     rate_type: "annual",
     birth_date: "1995-07-08",
@@ -173,10 +194,19 @@ const mockCandidates: RequisitionPositionCandidate[] = [
 ];
 
 const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
-  // Use mock data for now
-  const candidates = mockCandidates;
-  const isLoading = false;
-  const error = null;
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [pageSize] = React.useState(8); // Match the hook's default page size
+
+  // Use real data from API with pagination
+  const { data, isLoading, error } = useRequisitionCandidatesDetails(requisitionId, {
+    page: currentPage,
+    page_size: pageSize,
+  });
+
+  const candidates = data?.items || [];
+  const totalItems = data?.itemsTotal || 0;
+  const totalPages = Math.ceil(totalItems / pageSize);
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -185,15 +215,17 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "new":
-        return "bg-info/20 text-info border-info/30";
+      case "in_progress":
+        return "bg-success/20 text-success";
       case "interview":
-        return "bg-warning/20 text-warning border-warning/30";
+        return "bg-blue-100 text-blue-600";
+      case "accepted":
       case "approved":
-        return "bg-success/20 text-success border-success/30";
+        return "bg-green-100 text-green-600";
       case "rejected":
-        return "bg-destructive/20 text-destructive border-destructive/30";
+        return "bg-red-100 text-red-600";
       default:
-        return "bg-gray-500/20 text-gray-500 border-gray-500/30";
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -208,15 +240,15 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
             <Avatar className="w-10 h-10">
               <AvatarImage src={candidate.photo} />
               <AvatarFallback>
-                {candidate.name.charAt(0)}{candidate.last_name.charAt(0)}
+                {candidate.name?.charAt(0) || '?'}{candidate.last_name?.charAt(0) || '?'}
               </AvatarFallback>
             </Avatar>
             <div>
               <div className="font-medium text-sm">
-                {candidate.name} {candidate.last_name}
+                {candidate.name} {candidate.last_name || ''}
               </div>
               <div className="text-xs text-default-500">
-                {candidate.role} • {candidate.location}
+                {candidate.role || 'N/A'} • {candidate.location || 'N/A'}
               </div>
             </div>
           </div>
@@ -267,18 +299,21 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
       accessorKey: "skills",
       header: "Skills",
       cell: ({ row }) => {
-        const skills = row.getValue("skills") as string[];
+        const skills = (row.getValue("skills") as CandidateSkill[]) || [];
         return (
           <div className="flex flex-wrap gap-1">
             {skills.slice(0, 2).map((skill, index) => (
-              <Badge key={index} color="secondary" className="text-xs">
-                {skill}
+              <Badge key={skill.id || index} color="secondary" className="text-xs">
+                {skill.name}
               </Badge>
             ))}
             {skills.length > 2 && (
               <Badge color="secondary" className="text-xs">
                 +{skills.length - 2}
               </Badge>
+            )}
+            {skills.length === 0 && (
+              <span className="text-xs text-default-400">No skills</span>
             )}
           </div>
         );
@@ -331,7 +366,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // Remove client-side pagination since we're using server-side pagination
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -340,6 +375,9 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
       columnVisibility,
       rowSelection,
     },
+    // Disable client-side pagination
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
   });
 
   if (isLoading) {
@@ -366,7 +404,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
         </CardHeader>
         <CardContent className="p-6 text-center">
           <div className="text-destructive">
-            Error loading candidates: {error}
+            Error loading candidates: {error instanceof Error ? error.message : 'Unknown error'}
           </div>
         </CardContent>
       </Card>
@@ -376,7 +414,14 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Associated Candidates</CardTitle>
+        <CardTitle className="flex items-center justify-between">
+          <span>Associated Candidates</span>
+          {data && (
+            <Badge color="secondary" className="text-xs">
+              {totalItems} candidate{totalItems !== 1 ? 's' : ''}
+            </Badge>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <Table>
@@ -389,9 +434,9 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -428,27 +473,26 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
             )}
           </TableBody>
         </Table>
-        
-        {/* Pagination */}
-        <div className="flex items-center justify-end space-x-2 py-4 px-4">
+
+        {/* Server-side Pagination */}
+        <div className="flex items-center justify-between py-4 px-4">
           <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems} candidates
           </div>
-          <div className="space-x-2">
+          <div className="flex items-center space-x-2">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage <= 1}
             >
               Previous
             </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage >= totalPages}
             >
               Next
             </Button>

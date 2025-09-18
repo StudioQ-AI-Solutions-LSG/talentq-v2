@@ -6,8 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useCandidatesStore } from "@/store/candidate.store";
 import ListTable from "./components/list-table";
 import { getRequisitions } from "../services/data";
-import { useSearchParams, useRouter } from 'next/navigation';
-import Pagination, { PaginationButtonProps } from "../components/requisition-table-pagination";
+import { useSearchParams, useRouter } from "next/navigation";
+import Pagination, {
+  PaginationButtonProps,
+} from "../components/requisition-table-pagination";
 
 const RequisitionList = () => {
   const {
@@ -19,17 +21,16 @@ const RequisitionList = () => {
 
   // Sincronizar cambios de customer y división con la URL
 
-  const searchKey = searchParams.get('search_key') || undefined;
-  const statusFilter = searchParams.get('status') || undefined;
-  const currentPageFromUrl = parseInt(searchParams.get('page') || '1', 10);
+  const searchKey = searchParams.get("search_key") || undefined;
+  const statusFilter = searchParams.get("status") || undefined;
+  const currentPageFromUrl = parseInt(searchParams.get("page") || "1", 10);
 
   const [pageSize, setPageSize] = useState(8);
-
 
   useEffect(() => {
     // Reset page when customer or division changes
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', '1');
+    newSearchParams.set("page", "1");
     router.push(`?${newSearchParams.toString()}`);
   }, [selectedCustomer, selectedDivision, router]);
 
@@ -73,13 +74,13 @@ const RequisitionList = () => {
     previousPage: () => {
       const newPage = Math.max(1, currentPageFromUrl - 1);
       const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set('page', newPage.toString());
+      newSearchParams.set("page", newPage.toString());
       router.push(`?${newSearchParams.toString()}`);
     },
     nextPage: () => {
       const newPage = Math.min(data?.total_pages || 1, currentPageFromUrl + 1);
       const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set('page', newPage.toString());
+      newSearchParams.set("page", newPage.toString());
       router.push(`?${newSearchParams.toString()}`);
     },
     getCanPreviousPage: () => paginationState.pageIndex > 0,
@@ -88,13 +89,11 @@ const RequisitionList = () => {
     setPageIndex: (pageIndex: number) => {
       const newPage = pageIndex + 1; // Convertir de 0-based a 1-based
       const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set('page', newPage.toString());
+      newSearchParams.set("page", newPage.toString());
       router.push(`?${newSearchParams.toString()}`);
     },
     pagination: paginationState,
   };
-
-  console.log('List - Data:', data);
 
   return (
     <div>
