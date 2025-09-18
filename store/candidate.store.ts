@@ -8,7 +8,6 @@ interface CandidateStore extends CandidateListParams {
   resetParams: () => void;
 }
 
-// const DEFAULT_STATUS = "in_progress";
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 6;
 
