@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Eye, MessageSquare, FileText, Download } from "lucide-react";
 import { RequisitionPositionCandidate, CandidateSkill } from "../../services/requisitions-positions-candidates";
-import { useRequisitionCandidates } from "../../hooks/useRequisitionsPositionsCandidates";
+import { useRequisitionCandidatesDetails } from "../hooks/use-requisition-candidates-details";
 
 interface CandidatesTableProps {
   requisitionId: string;
@@ -198,7 +198,7 @@ const CandidatesTable = ({ requisitionId }: CandidatesTableProps) => {
   const [pageSize] = React.useState(8); // Match the hook's default page size
 
   // Use real data from API with pagination
-  const { data, isLoading, error } = useRequisitionCandidates(requisitionId, {
+  const { data, isLoading, error } = useRequisitionCandidatesDetails(requisitionId, {
     page: currentPage,
     page_size: pageSize,
   });

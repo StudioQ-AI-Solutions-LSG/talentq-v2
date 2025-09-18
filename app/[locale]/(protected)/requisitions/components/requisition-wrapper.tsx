@@ -129,13 +129,13 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
     <div>
       <CreateRequisition open={open} setOpen={setOpen} />
       <div className="mb-6">
-        {/* Title and Actions Row */}
+        {/* Título y botones de navegación */}
         <div className="flex w-full items-center justify-between mb-4">
           <h4 className="font-medium lg:text-2xl text-xl capitalize text-default-900">
             Requisitions
           </h4>
-
-          {/* Nav Buttons and Actions */}
+          
+          {/* Botones de navegación y acciones - siempre visibles */}
           <div className="flex items-center gap-4">
             {menus?.map(({ label, href, active }, index) => (
               <Button
@@ -162,16 +162,19 @@ const RequisitionWrapper = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <RequisitionFilter
-            search={search}
-            handleSearchBar={handleSearchBar}
-            statusRequisitions={statusRequisitions}
-            selectedStatus={selectedStatus}
-            handleStatusChange={handleStatusChange}
-            handleClearFilters={handleClearFilters}
-          />
-        </div>
+        {/* Filtros - solo mostrar si NO estamos en la página de detalles */}
+        {!isDetailsPage && (
+          <div className="flex items-center gap-3">
+            <RequisitionFilter
+              search={search}
+              handleSearchBar={handleSearchBar}
+              statusRequisitions={statusRequisitions}
+              selectedStatus={selectedStatus}
+              handleStatusChange={handleStatusChange}
+              handleClearFilters={handleClearFilters}
+            />
+          </div>
+        )}
       </div>
 
       {/* Pass filters as props to children */}
